@@ -1,0 +1,58 @@
+name: sigmatech
+description: "Ứng dụng mobile request đến API của server với backend Laravel PHP."
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.5.4
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  http: ^1.2.2
+  intl: ^0.20.1
+  logger: ^2.5.0
+  url_launcher: ^6.3.1
+  flutter_lints: ^4.0.0
+  flutter_native_splash: ^2.4.3
+  #Icons
+  iconsax: ^0.0.8
+  cupertino_icons: ^1.0.8
+
+  #state management
+  get: ^4.6.6
+  get_storage: ^2.1.1
+  #product specific
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
+
+  #--------------------------Local Asssets----------------------------#
+  assets:
+    - assets/logos/
+    - assets/icons/
+    - assets/images/
+    - assets/fonts/
+
+  #--------------------------Local Fonts----------------------------#
+  fonts:
+    - family: Roboto
+      fonts:
+        - asset: assets/fonts/Roboto-Light.ttf
+          weight: 300
+        - asset: assets/fonts/Roboto-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Roboto-Italic.ttf
+          style: italic
+        - asset: assets/fonts/Roboto-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Roboto-Bold.ttf
+          weight: 700
+
+          
+
