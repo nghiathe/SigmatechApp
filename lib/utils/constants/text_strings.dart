@@ -22,19 +22,20 @@ class TTexts {
 
 
   // -- Authentication Forms
-  static const String firstName = "First Name";
-  static const String lastName = "Last Name";
+  static const String firstName = "Tên";
+  static const String lastName = "Họ và tên đệm";
+  static const String fullName = "Họ và tên";
   static const String email = "E-Mail";
-  static const String password = "Password";
-  static const String newPassword = "New Password";
-  static const String username = "Username";
-  static const String phoneNo = "Phone Number";
-  static const String rememberMe = "Remember Me";
-  static const String forgetPassword = "Forget Password?";
-  static const String signIn = "Sign In";
-  static const String createAccount = "Create Account";
-  static const String orSignInWith = "or sign in with";
-  static const String orSignUpWith = "or sign up with";
+  static const String password = "Mật khẩu";
+  static const String newPassword = "Mật khẩu mới";
+  static const String username = "Tên người dùng";
+  static const String phoneNo = "Số điện thoại";
+  static const String rememberMe = "Ghi nhớ đăng nhập";
+  static const String forgetPassword = "Quên mật khẩu?";
+  static const String signIn = "Đăng nhập";
+  static const String createAccount = "Tạo tài khoản";
+  static const String orSignInWith = "hoặc đăng nhập với";
+  static const String orSignUpWith = "hoặc đăng nhập với";
   static const String iAgreeTo = "I agree to";
   static const String privacyPolicy = "Privacy Policy";
   static const String termsOfUse = "Terms of use";
@@ -44,8 +45,8 @@ class TTexts {
 
 
   // -- Authentication Headings
-  static const String loginTitle = "Welcome back,";
-  static const String loginSubTitle = "Discover Limitless Choices and Unmatched Convenience.";
+  static const String loginTitle = "Simatech chào bạn,";
+  static const String loginSubTitle = "Trải nghiệm mua sắm với tiện nghi vô tận và hiện đại.";
   static const String signupTitle = "Let’s create your account";
   static const String forgetPasswordTitle = "Forget password";
   static const String forgetPasswordSubTitle = "Don’t worry sometimes people can forget too, enter your email and we will send you a password reset link.";
