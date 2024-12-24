@@ -9,6 +9,8 @@ import 'package:sigmatech/utils/constants/sizes.dart';
 import 'package:sigmatech/utils/constants/text_strings.dart';
 import 'package:sigmatech/utils/helpers/helper_functions.dart';
 
+import '../../../shop/screens/home/home.dart';
+
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
 
@@ -32,6 +34,24 @@ class LoginScreen extends StatelessWidget {
           const SizedBox(height: TSizes.spaceBtwSections),
           //footer
           const TSocialButtons(),
+          const SizedBox(height: TSizes.spaceBtwSections),
+
+          // Skip button
+          TextButton(
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const HomeScreen()),
+              );
+            },
+            child: Text(
+              "Skip",
+              style: TextStyle(
+                color: dark ? Colors.white : Colors.blue,
+                fontSize: 16,
+              ),
+            ),
+          ),
         ],
       ),
     )));
