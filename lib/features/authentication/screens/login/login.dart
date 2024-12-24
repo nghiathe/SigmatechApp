@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:iconsax/iconsax.dart';
-import 'package:sigmatech/app.dart';
 import 'package:sigmatech/common/styles/spacing_styles.dart';
 import 'package:sigmatech/common/widgets/login_signup/social_buttons.dart';
 import 'package:sigmatech/common/widgets/login_signup/form_divider.dart';
 import 'package:sigmatech/features/authentication/screens/login/widgets/login_form.dart';
 import 'package:sigmatech/features/authentication/screens/login/widgets/login_header.dart';
-import 'package:sigmatech/utils/constants/colors.dart';
-import 'package:sigmatech/utils/constants/image_strings.dart';
 import 'package:sigmatech/utils/constants/sizes.dart';
 import 'package:sigmatech/utils/constants/text_strings.dart';
 import 'package:sigmatech/utils/helpers/helper_functions.dart';

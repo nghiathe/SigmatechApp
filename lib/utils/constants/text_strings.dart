@@ -27,6 +27,7 @@ class TTexts {
   static const String fullName = "Họ và tên";
   static const String email = "E-Mail";
   static const String password = "Mật khẩu";
+  static const String passwordConfirm = "Xác nhận mật khẩu";
   static const String newPassword = "Mật khẩu mới";
   static const String username = "Tên người dùng";
   static const String phoneNo = "Số điện thoại";
@@ -37,8 +38,8 @@ class TTexts {
   static const String orSignInWith = "hoặc đăng nhập với";
   static const String orSignUpWith = "hoặc đăng nhập với";
   static const String iAgreeTo = "Tôi đồng ý với";
-  static const String privacyPolicy = "Chính sách bảo mật";
-  static const String termsOfUse = "Điều khoản sử dụng";
+  static const String privacyPolicy = "Chính sách";
+  static const String termsOfUse = "Điều khoản";
   static const String verificationCode = "verificationCode";
   static const String resendEmail = "Resend Email";
   static const String resendEmailIn = "Resend email in";
