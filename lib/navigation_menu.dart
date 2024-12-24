@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:sigmatech/features/personalization/screens/settings/settings.dart';
 import 'package:sigmatech/features/shop/screens/home/home.dart';
 import 'package:sigmatech/features/shop/screens/store/store.dart';
 import 'package:sigmatech/utils/constants/colors.dart';
@@ -33,11 +34,12 @@ class NavigationMenu  extends StatelessWidget {
         ),
       ),
       body: Obx(() => controller.screens[controller.selectedIndex.value]),
+      
     );
   }
 }
 class NavigationController extends GetxController{
   final Rx<int> selectedIndex = 0.obs;
 
-  final screens = [ const HomeScreen() ,  const StoreScreen(), Container(color: Colors.blue), Container(color: Colors.blue)];
+  final screens = [ const HomeScreen() ,  const StoreScreen(), Container(color: Colors.blue), const SettingsScreen()];
 }
