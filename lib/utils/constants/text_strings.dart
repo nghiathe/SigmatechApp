@@ -3,7 +3,7 @@
 class TTexts {
 
   // -- GLOBAL Texts
-  static const String and = "and";
+  static const String and = "và";
   static const String skip = "Skip";
   static const String done = "Done";
   static const String submit = "Submit";
@@ -36,9 +36,9 @@ class TTexts {
   static const String createAccount = "Tạo tài khoản";
   static const String orSignInWith = "hoặc đăng nhập với";
   static const String orSignUpWith = "hoặc đăng nhập với";
-  static const String iAgreeTo = "I agree to";
-  static const String privacyPolicy = "Privacy Policy";
-  static const String termsOfUse = "Terms of use";
+  static const String iAgreeTo = "Tôi đồng ý với";
+  static const String privacyPolicy = "Chính sách bảo mật";
+  static const String termsOfUse = "Điều khoản sử dụng";
   static const String verificationCode = "verificationCode";
   static const String resendEmail = "Resend Email";
   static const String resendEmailIn = "Resend email in";
@@ -47,7 +47,7 @@ class TTexts {
   // -- Authentication Headings
   static const String loginTitle = "Simatech chào bạn,";
   static const String loginSubTitle = "Trải nghiệm mua sắm với tiện nghi vô tận và hiện đại.";
-  static const String signupTitle = "Let’s create your account";
+  static const String signupTitle = "Đăng ký tài khoản cho bạn";
   static const String forgetPasswordTitle = "Forget password";
   static const String forgetPasswordSubTitle = "Don’t worry sometimes people can forget too, enter your email and we will send you a password reset link.";
   static const String changeYourPasswordTitle = "Password Reset Email Sent";
