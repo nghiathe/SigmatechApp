@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:sigmatech/features/authentication/controllers/login/login_controller.dart';
 import 'package:sigmatech/features/authentication/screens/signup/signup.dart';
+import 'package:sigmatech/navigation_menu.dart';
 import 'package:sigmatech/utils/constants/sizes.dart';
 import 'package:sigmatech/utils/constants/text_strings.dart';
 import 'package:sigmatech/utils/validators/validation.dart';
@@ -69,7 +70,7 @@ class TLoginForm extends StatelessWidget {
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              onPressed: () => controller.signin(), 
+              onPressed: () => Get.to(() => const NavigationMenu()), 
               child: const Text(TTexts.signIn)
             )
           ),
