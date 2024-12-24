@@ -4,6 +4,7 @@ import 'package:iconsax/iconsax.dart';
 import 'package:sigmatech/features/personalization/screens/settings/settings.dart';
 import 'package:sigmatech/features/shop/screens/home/home.dart';
 import 'package:sigmatech/features/shop/screens/store/store.dart';
+import 'package:sigmatech/features/shop/screens/wishlist/wishlist.dart';
 import 'package:sigmatech/utils/constants/colors.dart';
 import 'package:sigmatech/utils/helpers/helper_functions.dart';
 
@@ -41,5 +42,5 @@ class NavigationMenu  extends StatelessWidget {
 class NavigationController extends GetxController{
   final Rx<int> selectedIndex = 0.obs;
 
-  final screens = [ Container(color: Colors.blue) ,  const StoreScreen(), Container(color: Colors.blue), Container(color: Colors.blue)];
+  final screens = [ const HomeScreen() ,  const StoreScreen(), const WishlistScreen(), Container(color: Colors.blue)];
 }
