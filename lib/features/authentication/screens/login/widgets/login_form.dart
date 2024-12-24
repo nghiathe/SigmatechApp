@@ -17,6 +17,7 @@ class TLoginForm extends StatelessWidget {
     final controller = Get.put(LoginController());
 
     return Form(
+      key: controller.loginFormKey,
       child: Column(
         children: [
           TextFormField(
@@ -70,7 +71,7 @@ class TLoginForm extends StatelessWidget {
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              onPressed: () => Get.to(() => const NavigationMenu()), 
+              onPressed: () => controller.signin(), 
               child: const Text(TTexts.signIn)
             )
           ),

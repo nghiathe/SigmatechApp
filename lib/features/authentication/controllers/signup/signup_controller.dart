@@ -25,21 +25,13 @@ class SignupController extends GetxController {
     try {
       //start loading
       TFullScreenLoader.openLoadingDialog(
-          'Hệ thống đang xử lý thông tin...', Timages.docerAnimation);
+        'Hệ thống đang xử lý thông tin...', Timages.docerAnimation);
       final isConnected = await NetworkManager.instance.isConnected();
-      if (!isConnected) return;
-
-      //form validation
-      if (signupFormKey.currentState!.validate()) {
-        final name = this.name.text.trim();
-        final email = this.email.text.trim();
-        final phone = this.phone.text.trim();
-        final password = this.password.text.trim();
-        final passwordConfirm = this.passwordConfirm.text.trim();
-        await AuthenticationRepository.instance.registerUser(name, email, phone, password, passwordConfirm);
+      if (!isConnected) {
+        TFullScreenLoader.stopLoading();
+        TLoaders.errorSnackBar(
+          title: 'Lỗi kết nối', message: 'Không có kết nối mạng.');
       }
-
-      //Privacy policy check
       if (!privacyPolicy.value) {
         TLoaders.warningSnackBar(
           title: 'Hãy xác nhận điều khoản',
@@ -47,7 +39,35 @@ class SignupController extends GetxController {
         );
         return;
       }
+      //form validation
+      if (!signupFormKey.currentState!.validate()) {
+        TFullScreenLoader.stopLoading();
+        TLoaders.errorSnackBar(
+          title: 'Đăng ký không thành công.',
+          message: 'Vui lòng kiểm tra lại thông tin đăng ký.');
+        return;
+        // final name = this.name.text.trim();
+        // final email = this.email.text.trim();
+        // final phone = this.phone.text.trim();
+        // final password = this.password.text.trim();
+        // final passwordConfirm = this.passwordConfirm.text.trim();
+        // await AuthenticationRepository.instance.registerUser(name, email, phone, password, passwordConfirm);
+      }
 
+      final registerResponse = await AuthenticationRepository.instance
+        .registerUser(
+          name.text.trim(),
+          email.text.trim(),
+          phone.text.trim(),
+          password.text.trim(),
+          passwordConfirm.text.trim());
+      //Privacy policy check
+      if (registerResponse == null) {
+        TFullScreenLoader.stopLoading();
+        return;
+      }
+
+      TFullScreenLoader.stopLoading();
       TLoaders.successSnackBar(
         title: 'Đăng ký thành công',
         message: 'Tài khoản đã được tạo. Vui lòng đăng nhập!',
@@ -59,9 +79,6 @@ class SignupController extends GetxController {
       //Đăng ký người dùng ở backend Laravel và lưu dữ liệu người dùng
     } catch (e) {
       TLoaders.errorSnackBar(title: 'Oops!', message: e.toString());
-    } 
-    // finally {
-    //   TFullScreenLoader.stopLoading();
-    // }
+    }
   }
 }

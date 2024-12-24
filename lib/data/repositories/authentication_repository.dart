@@ -35,33 +35,28 @@ class AuthenticationRepository extends GetxController {
   }
 
   /// Xử lý logic đăng ký người dùng
-  Future<void> registerUser(String name, String email, String phone,
-      String password, String passwordConfirm) async {
-    try {
-      final response = await _authService.register(
-          name, email, phone, password, passwordConfirm);
+  Future<Map<String, dynamic>?> registerUser(String name, String email, String phone, String password, String passwordConfirm) async {
+    final response = await _authService.register(
+        name, email, phone, password, passwordConfirm);
 
-      // Lưu token vào local storage
-      if (response.containsKey('token')) {
-        deviceStorage.write('authToken', response['token']);
-        deviceStorage.write('isLoggedIn', true);
-      }
-    } catch (e) {
-      TLoaders.errorSnackBar(title: 'Oops!', message: e.toString());
+    if (response == null) return null;
+    // Lưu token vào local storage
+    if (response.containsKey('token')) {
+      deviceStorage.write('authToken', response['token']);
     }
+    return response;
   }
 
-  Future<void> loginUser(String email, String password) async {
-    try {
-      final response = await _authService.login(email, password);
+  Future<Map<String, dynamic>?> loginUser(String email, String password) async {
+    final response = await _authService.login(email, password);
 
-      // Lưu token vào local storage
-      if (response.containsKey('token')) {
-        deviceStorage.write('authToken', response['token']);
-        deviceStorage.write('isLoggedIn', true);
-      }
-    } catch (e) {
-      TLoaders.errorSnackBar(title: 'Oops!', message: e.toString());
-    }
+    if (response == null) return null;
+
+    if (response.containsKey('token')) {
+      // Lưu token vào local storage nếu có
+      deviceStorage.write('authToken', response['token']);
+    } 
+    // Trả về response
+    return response;
   }
 }

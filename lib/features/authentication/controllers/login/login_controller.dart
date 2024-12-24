@@ -25,35 +25,37 @@ class LoginController extends GetxController {
       final isConnected = await NetworkManager.instance.isConnected();
       if (!isConnected) {
         TFullScreenLoader.stopLoading();
-        TLoaders.errorSnackBar(title: 'Lỗi kết nối', message: 'Không có kết nối mạng.');
+        TLoaders.errorSnackBar(
+            title: 'Lỗi kết nối', message: 'Không có kết nối mạng.');
+        return;
+      }
+      // Kiểm tra tính hợp lệ của form
+      if (!loginFormKey.currentState!.validate()) {
+        TFullScreenLoader.stopLoading();
         return;
       }
 
-      // Kiểm tra tính hợp lệ của form
-      if (loginFormKey.currentState == null || !loginFormKey.currentState!.validate()) {
-        await AuthenticationRepository.instance.loginUser(email.text.trim(), password.text.trim());
-      }
-
       // Gọi phương thức loginUser từ AuthenticationRepository
-      
-  
-      // Dừng loading dialog và hiển thị thông báo thành công
+      final loginResponse = await AuthenticationRepository.instance
+          .loginUser(email.text.trim(), password.text.trim());
+
       TFullScreenLoader.stopLoading();
-      TLoaders.successSnackBar(
-        title: 'Đăng nhập thành công',
-        message: 'Chào mừng bạn đến với Sigmatech!',
-      );
 
-      // Điều hướng màn hình sau khi đăng nhập thành công
-      AuthenticationRepository.instance.screenRedirect();
-
+      // Kiểm tra kết quả trả về từ loginUser
+      if (loginResponse != null && loginResponse['token'] != null) {
+        // Hiển thị thông báo thành công
+        TLoaders.successSnackBar(
+          title: 'Đăng nhập thành công',
+          message: 'Chào mừng bạn đến với Sigmatech!',
+        );
+        // Điều hướng màn hình sau khi đăng nhập thành công
+        AuthenticationRepository.instance.screenRedirect();
+      }
     } catch (e) {
       // Dừng loading dialog nếu có lỗi
       TFullScreenLoader.stopLoading();
-
       // Hiển thị thông báo lỗi
       TLoaders.errorSnackBar(title: 'Oops!', message: e.toString());
     }
   }
-
 }

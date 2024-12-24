@@ -149,7 +149,7 @@ class WishlistCard extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 1),
             Text(
               title,
               maxLines: 2,
@@ -159,7 +159,7 @@ class WishlistCard extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: 1),
             Text(
               brand,
               style: const TextStyle(
@@ -167,7 +167,7 @@ class WishlistCard extends StatelessWidget {
                 color: Colors.grey,
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 2),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
