@@ -27,7 +27,7 @@ class NavigationMenu  extends StatelessWidget {
             destinations: const [
               NavigationDestination(icon: Icon(Iconsax.home), label: 'Trang chủ'),
               NavigationDestination(icon: Icon(Iconsax.shop), label: 'Sản phẩm'),
-              NavigationDestination(icon: Icon(Iconsax.heart), label: 'Sản phẩm yêu thích'),
+              NavigationDestination(icon: Icon(Iconsax.heart), label: 'Yêu thích'),
               NavigationDestination(icon: Icon(Iconsax.user), label: 'Tài khoản'),
           ]
         ),
@@ -39,5 +39,5 @@ class NavigationMenu  extends StatelessWidget {
 class NavigationController extends GetxController{
   final Rx<int> selectedIndex = 0.obs;
 
-  final screens = [ const HomeScreen() ,  const StoreScreen(), Container(color: Colors.blue), Container(color: Colors.blue)];
+  final screens = [ Container(color: Colors.blue) ,  const StoreScreen(), Container(color: Colors.blue), Container(color: Colors.blue)];
 }

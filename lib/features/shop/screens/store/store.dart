@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:sigmatech/common/widgets/appbar/appbar.dart';
+import 'package:sigmatech/common/widgets/products.cart/cart_menu_icon.dart';
 import 'package:sigmatech/utils/constants/colors.dart';
 
 class StoreScreen extends StatelessWidget {
@@ -11,21 +13,10 @@ class StoreScreen extends StatelessWidget {
     final darkMode = MediaQuery.of(context).platformBrightness == Brightness.dark;
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: darkMode ? TColors.black : Colors.white,
-        elevation: 0,
-        title: const Text(
-          'Store',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        centerTitle: true,
+      appBar: TAppBar(
+        title: Text( 'Store', style: Theme.of(context).textTheme.headlineMedium),
         actions: [
-          IconButton(
-            icon: Icon(Icons.shopping_cart, color: darkMode ? Colors.white : Colors.black),
-            onPressed: () {},
-          ),
+          TCartCounterIcon(onPressed: (){}),
         ],
       ),
       body: Padding(
