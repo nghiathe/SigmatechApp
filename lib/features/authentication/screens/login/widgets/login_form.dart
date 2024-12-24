@@ -4,7 +4,7 @@ import 'package:iconsax/iconsax.dart';
 import 'package:sigmatech/features/authentication/screens/signup/signup.dart';
 import 'package:sigmatech/utils/constants/sizes.dart';
 import 'package:sigmatech/utils/constants/text_strings.dart';
-
+import 'package:sigmatech/navigation_menu.dart';
 class TLoginForm extends StatelessWidget {
   const TLoginForm({
     super.key,
@@ -51,7 +51,7 @@ class TLoginForm extends StatelessWidget {
           //Sign in button
           SizedBox(
             width: double.infinity,
-            child:  ElevatedButton(onPressed: () {}, child: const Text(TTexts.signIn)),
+            child:  ElevatedButton(onPressed: () => Get.to(() => NavigationMenu()), child: const Text(TTexts.signIn)),
           ),
           const SizedBox(height: TSizes.spaceBtwItems),
     
