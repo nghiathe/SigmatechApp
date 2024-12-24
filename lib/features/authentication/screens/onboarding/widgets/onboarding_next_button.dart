@@ -4,7 +4,7 @@ import 'package:sigmatech/utils/constants/colors.dart';
 import 'package:sigmatech/utils/constants/sizes.dart';
 import 'package:sigmatech/utils/device/device_utility.dart';
 import 'package:sigmatech/utils/helpers/helper_functions.dart';
-import 'package:sigmatech/features/authentication/controllers.onboarding/onboarding_controller.dart';
+import 'package:sigmatech/features/authentication/controllers/onboarding/onboarding_controller.dart';
 
 class OnBoardingNextButton extends StatelessWidget {
   const OnBoardingNextButton({

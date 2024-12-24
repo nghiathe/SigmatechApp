@@ -4,10 +4,11 @@ import 'package:flutter/material.dart';
 
 import 'app.dart';
 
-void main() {
-
-
+Future<void> main() async {
+  //Add wigdet Binding
+  final WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  //Init local storage
+  
+  //await native splash
   runApp(const MyApp());
 }
-
-

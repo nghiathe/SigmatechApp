@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:sigmatech/features/authentication/controllers/signup/signup_controller.dart';
 import 'package:sigmatech/utils/constants/colors.dart';
 import 'package:sigmatech/utils/constants/sizes.dart';
 import 'package:sigmatech/utils/constants/text_strings.dart';
@@ -11,6 +13,7 @@ class TTermsAndConditionCheckbox extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
+    final controller = SignupController.instance;
     final dark = THelperFunctions.isDarkMode(context);
     return Row(
       children: [
@@ -18,7 +21,12 @@ class TTermsAndConditionCheckbox extends StatelessWidget {
           width: 24, 
           height:  24,
           child: 
-          Checkbox(value: true, onChanged: (value) {}),
+          Obx(
+            () => Checkbox(
+              value: controller.privacyPolicy.value, 
+              onChanged: (value) => controller.privacyPolicy.value = !controller.privacyPolicy.value,
+              ),
+            ),
         ),
         const SizedBox(height: TSizes.spaceBtwItems),
         Text.rich(

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sigmatech/features/authentication/controllers.onboarding/onboarding_controller.dart';
+import 'package:sigmatech/features/authentication/controllers/onboarding/onboarding_controller.dart';
 import 'package:sigmatech/utils/constants/sizes.dart';
 import 'package:sigmatech/utils/device/device_utility.dart';
 

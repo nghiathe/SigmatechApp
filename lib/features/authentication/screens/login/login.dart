@@ -7,14 +7,12 @@ import 'package:sigmatech/features/authentication/screens/login/widgets/login_fo
 import 'package:sigmatech/features/authentication/screens/login/widgets/login_header.dart';
 import 'package:sigmatech/utils/constants/sizes.dart';
 import 'package:sigmatech/utils/constants/text_strings.dart';
-import 'package:sigmatech/utils/helpers/helper_functions.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final dark = THelperFunctions.isDarkMode(context);
     return Scaffold(
         body: SingleChildScrollView(
             child: Padding(
