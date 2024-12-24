@@ -57,13 +57,13 @@ class TSignupForm extends StatelessWidget {
           () => TextFormField(
             validator: (value) => TValidator.validatePassword(value),
             controller: controller.password,
-            obscureText: controller.hidePasswordConfirm.value,
+            obscureText: controller.hidePassword.value,
             decoration: InputDecoration(
               labelText: TTexts.password,
               prefixIcon: const Icon(Iconsax.password_check),
               suffixIcon: IconButton(
-                onPressed: () => controller.hidePasswordConfirm.value = !controller.hidePasswordConfirm.value, 
-                icon: Icon(controller.hidePasswordConfirm.value ? Iconsax.eye_slash : Iconsax.eye),
+                onPressed: () => controller.hidePassword.value = !controller.hidePassword.value, 
+                icon: Icon(controller.hidePassword.value ? Iconsax.eye_slash : Iconsax.eye),
               ),
             ),
           ),
@@ -74,13 +74,13 @@ class TSignupForm extends StatelessWidget {
           () => TextFormField(
             validator: (value) => TValidator.validatePasswordConfirm(controller.password.text, value),
             controller: controller.passwordConfirm,
-            obscureText: controller.hidePassword.value,
+            obscureText: controller.hidePasswordConfirm.value,
             decoration: InputDecoration(
               labelText: TTexts.passwordConfirm,
               prefixIcon: const Icon(Iconsax.password_check),
               suffixIcon: IconButton(
-                onPressed: () => controller.hidePassword.value = !controller.hidePassword.value, 
-                icon: Icon(controller.hidePassword.value ? Iconsax.eye_slash : Iconsax.eye),
+                onPressed: () => controller.hidePasswordConfirm.value = !controller.hidePasswordConfirm.value, 
+                icon: Icon(controller.hidePasswordConfirm.value ? Iconsax.eye_slash : Iconsax.eye),
               ),
             ),
           ),

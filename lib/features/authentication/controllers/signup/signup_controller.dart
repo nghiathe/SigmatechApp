@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sigmatech/data/repositories/authentication_repository.dart';
+import 'package:sigmatech/features/authentication/screens/login/login.dart';
 import 'package:sigmatech/utils/constants/image_strings.dart';
 import 'package:sigmatech/utils/helpers/network_manager.dart';
 import 'package:sigmatech/utils/popups/full_screen_loader.dart';
@@ -24,7 +25,7 @@ class SignupController extends GetxController {
     try {
       //start loading
       TFullScreenLoader.openLoadingDialog(
-          'Hệ thống đang xử lý thông tin...', Timages.lightAppLogo);
+          'Hệ thống đang xử lý thông tin...', Timages.docerAnimation);
       final isConnected = await NetworkManager.instance.isConnected();
       if (!isConnected) return;
 
@@ -47,11 +48,20 @@ class SignupController extends GetxController {
         return;
       }
 
+      TLoaders.successSnackBar(
+        title: 'Đăng ký thành công',
+        message: 'Tài khoản đã được tạo. Vui lòng đăng nhập!',
+      );
+
+      // Chuyển người dùng sang trang Login
+      Get.offAll(const LoginScreen());
+
       //Đăng ký người dùng ở backend Laravel và lưu dữ liệu người dùng
     } catch (e) {
       TLoaders.errorSnackBar(title: 'Oops!', message: e.toString());
-    } finally {
-      TFullScreenLoader.stopLoading();
-    }
+    } 
+    // finally {
+    //   TFullScreenLoader.stopLoading();
+    // }
   }
 }

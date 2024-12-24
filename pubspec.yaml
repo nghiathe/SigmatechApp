@@ -19,7 +19,7 @@ dependencies:
   flutter_native_splash: ^2.4.3
   smooth_page_indicator: ^1.2.0+3
   connectivity_plus: ^6.1.1
-  lottie: ^3.2.0
+  lottie: ^2.7.0
 
   #Icons
   iconsax: ^0.0.8
@@ -42,6 +42,7 @@ flutter:
     - assets/logos/
     - assets/icons/
     - assets/images/on_boarding_images/
+    - assets/images/animations/
     - assets/fonts/
 
   #--------------------------Local Fonts----------------------------#
