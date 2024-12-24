@@ -21,14 +21,20 @@ class AuthenticationRepository extends GetxController {
   /// Điều hướng người dùng khi khởi động ứng dụng
   screenRedirect() async {
     final user = await _authService.currentUser;
+    print("Current User: $user"); // Kiểm tra giá trị của user
+
     if (user != null) {
+      print("User is logged in. Navigating to NavigationMenu.");
       Get.offAll(() => const NavigationMenu());
-    }
-    deviceStorage.writeIfNull('IsFirstTime', true);
-    if (deviceStorage.read('IsFirstTime') != true) {
-      Get.offAll(() => const LoginScreen());
     } else {
-      Get.offAll(() => const OnboardingScreen());
+      deviceStorage.writeIfNull('IsFirstTime', true);
+      if (deviceStorage.read('IsFirstTime') != true) {
+        print("Navigating to LoginScreen.");
+        Get.offAll(() => const LoginScreen());
+      } else {
+        print("Navigating to OnboardingScreen.");
+        Get.offAll(() => const OnboardingScreen());
+      }
     }
   }
 
