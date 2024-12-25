@@ -6,9 +6,7 @@ import '../../../../../utils/constants/colors.dart';
 import '../../../../../utils/constants/text_strings.dart';
 
 class THomeAppBar extends StatelessWidget {
-  const THomeAppBar({
-    super.key,
-  });
+  const THomeAppBar({super.key});
 
   @override
   Widget build(BuildContext context) {
