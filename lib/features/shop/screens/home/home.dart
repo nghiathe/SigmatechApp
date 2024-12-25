@@ -1,3 +1,4 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:iconsax/iconsax.dart';
@@ -17,6 +18,11 @@ class HomeScreen extends StatelessWidget {
   final LaptopService laptopService = LaptopService.instance;
   final TextEditingController searchController = TextEditingController(); // Thêm controller
   final WishlistService wishlistService = Get.put(WishlistService());
+  final List<String> sliderImages = [
+    'https://6ma.zapto.org/assets/img/banner/Slider/Slide1.jpg',
+    'https://6ma.zapto.org/assets/img/banner/Slider/Slide2.jpg',
+    'https://6ma.zapto.org/assets/img/banner/Slider/Slide3.jpg',
+  ];
   HomeScreen({super.key});
   void _onSearch(BuildContext context) {
     final keyword = searchController.text.trim();
@@ -94,6 +100,35 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ],
                 ),
+              ),
+              const SizedBox(height: 20),
+
+              // Slider
+              CarouselSlider(
+                options: CarouselOptions(
+                  height: 200.0,
+                  autoPlay: true,
+                  enlargeCenterPage: true,
+                  aspectRatio: 16 / 9,
+                  viewportFraction: 0.8,
+                ),
+                items: sliderImages.map((imageUrl) {
+                  return Builder(
+                    builder: (BuildContext context) {
+                      return ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image.network(
+                          imageUrl,
+                          fit: BoxFit.cover,
+                          width: screenWidth,
+                          errorBuilder: (context, error, stackTrace) {
+                            return const Icon(Icons.error, size: 50);
+                          },
+                        ),
+                      );
+                    },
+                  );
+                }).toList(),
               ),
 
               const SizedBox(height: 30),
