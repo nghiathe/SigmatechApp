@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:sigmatech/features/shop/controllers/userprofile/user_profile_controller.dart';
 import 'package:sigmatech/utils/constants/colors.dart';
+import 'package:sigmatech/utils/constants/sizes.dart';
 import 'package:sigmatech/utils/helpers/helper_functions.dart';
 
 class AddressScreen extends StatelessWidget {
@@ -11,7 +12,7 @@ class AddressScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final dark = THelperFunctions.isDarkMode(context);
-    final controller = Get.find<UserProfileController>();
+    final controller = Get.put(UserProfileController());
 
     return Scaffold(
       appBar: AppBar(
@@ -25,25 +26,25 @@ class AddressScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Hiển thị địa chỉ người dùng
-            Text(
+            const Text(
               'Địa chỉ giao hàng hiện tại:',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: TSizes.fontSizeLg, fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: TSizes.defaultSpace),
             Obx(() {
               return Text(
                 controller.userAddress,
-                style: TextStyle(fontSize: 16, color: Colors.grey),
+                style: const TextStyle(fontSize: TSizes.fontSizeMd, color: Colors.grey),
               );
             }),
-            const SizedBox(height: 24),
+            const SizedBox(height: TSizes.spaceBtwSections),
 
             // Nút để chỉnh sửa địa chỉ
             ElevatedButton.icon(
               onPressed: () {
                 _showEditAddressDialog(context, controller);
               },
-              icon: const Icon(Iconsax.edit, size: 18),
+              icon: const Icon(Iconsax.edit, size: TSizes.iconMd),
               label: const Text('Chỉnh sửa địa chỉ'),
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
