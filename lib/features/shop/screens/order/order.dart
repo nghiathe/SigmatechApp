@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:intl/intl.dart';
 
+import '../../../../navigation_menu.dart';
 import '../../controllers/userprofile/user_profile_controller.dart';
 import '../UserProfile/OrderList.dart';
 import '../home/home.dart';
@@ -73,40 +74,27 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
 
       if (response.statusCode == 200 && data['status'] == 'success') {
         if (_paymentMethod == 'banking') {
-          // Điều hướng đến trang QR, khi nhấn "Trở về" sẽ về HomeScreen
-          Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(
-              builder: (context) => QRScreen(qrUrl: data['qrUrl']),
-            ),
-                (route) => false, // Xóa toàn bộ stack để tránh quay về OrderDetailScreen
-          ).then((_) {
-            // Khi người dùng nhấn nút "Back", quay về HomeScreen
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => HomeScreen()),
-            );
-          });
+          // Điều hướng đến trang QR và giữ lại navigation
+          Get.offAll(QRScreen(qrUrl: data['qrUrl']));
         } else {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => OrderListScreen(token: token)),
-          );
+          // Điều hướng về màn hình đơn hàng
+          Get.offAll(() => OrderListScreen(token: token));
           showDialog(
             context: context,
-            builder: (context) => AlertDialog(
-              title: Text('Đặt hàng thành công'),
-              content: Text(data['message'] ?? 'Đặt hàng thành công!'),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: Text('OK'),
+            builder: (context) =>
+                AlertDialog(
+                  title: Text('Đặt hàng thành công'),
+                  content: Text(data['message'] ?? 'Đặt hàng thành công!'),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Get.back(), // Quay lại
+                      child: Text('OK'),
+                    ),
+                  ],
                 ),
-              ],
-            ),
           );
         }
-      } else {
+      }  else {
         // Nếu có lỗi khi gửi yêu cầu
         showDialog(
           context: context,
@@ -354,11 +342,9 @@ class QRScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => HomeScreen()),
-        );
-        return false; // Ngăn không quay lại màn hình trước
+        // Quay lại màn hình trước mà vẫn giữ lại NavigationBar
+        Get.offAll(() => NavigationMenu()); // Quay về NavigationMenu hoặc trang nào có NavigationBar
+        return false; // Ngăn không cho hành động mặc định (back stack)
       },
       child: Scaffold(
         appBar: AppBar(title: Text('Mã QR thanh toán')),
@@ -376,3 +362,6 @@ class QRScreen extends StatelessWidget {
     );
   }
 }
+
+
+

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:iconsax/iconsax.dart';
 
@@ -15,39 +16,25 @@ class TCartCounterIcon extends StatelessWidget {
   final Color? iconColor;
   final VoidCallback onPressed;
 
-
   @override
   Widget build(BuildContext context) {
+    final CartController cartController = Get.put(CartController());
     final deviceStorage = GetStorage();
     String token = deviceStorage.read('authToken');
-    return FutureBuilder<int>(
-      future: CartController.getCartCount(token),  // Gọi API lấy số lượng sản phẩm
-      builder: (context, snapshot) {
-        // Kiểm tra trạng thái kết nối của FutureBuilder
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return IconButton(
+
+    // Cập nhật số lượng sản phẩm giỏ hàng mỗi khi màn hình được xây dựng
+    cartController.updateCartCount(token);
+
+    return Obx(() {
+      int cartCount = cartController.cartCount.value;  // Lấy số lượng từ Rx<int>
+
+      return Stack(
+        children: [
+          IconButton(
             onPressed: onPressed,
             icon: const Icon(Icons.shopping_bag, color: TColors.black),
-          );
-        }
-
-        // Kiểm tra lỗi
-        if (snapshot.hasError) {
-          return IconButton(
-            onPressed: onPressed,
-            icon: const Icon(Icons.shopping_bag, color: TColors.black),
-          );
-        }
-
-        // Lấy số lượng sản phẩm từ kết quả API
-        int cartCount = snapshot.data ?? 0;  // Nếu không có dữ liệu, mặc định là 0
-
-        return Stack(
-          children: [
-            IconButton(
-              onPressed: onPressed,
-              icon: const Icon(Icons.shopping_bag, color: TColors.black),
-            ),
+          ),
+            // Hiển thị số lượng chỉ khi có sản phẩm trong giỏ hàng
             Positioned(
               right: 0,
               child: Container(
@@ -59,7 +46,7 @@ class TCartCounterIcon extends StatelessWidget {
                 ),
                 child: Center(
                   child: Text(
-                    cartCount.toString(),  // Hiển thị số lượng sản phẩm
+                    cartCount.toString(),
                     style: Theme.of(context)
                         .textTheme
                         .labelLarge!
@@ -68,12 +55,8 @@ class TCartCounterIcon extends StatelessWidget {
                 ),
               ),
             ),
-          ],
-        );
-      },
-    );
+        ],
+      );
+    });
   }
 }
-
-
-

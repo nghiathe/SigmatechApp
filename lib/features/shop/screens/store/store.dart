@@ -200,6 +200,9 @@ class StoreScreen extends StatelessWidget {
                                   'Giỏ hàng',
                                   '${laptop['name']} đã được thêm vào giỏ hàng!',
                                 );
+
+                                // Cập nhật lại số lượng giỏ hàng sau khi thêm
+                                CartController().updateCartCount(token);
                               },
                               child: const Icon(
                                 Iconsax.add,
@@ -208,7 +211,6 @@ class StoreScreen extends StatelessWidget {
                               ),
                             ),
                           ),
-
 
                         ],
                       ),
