@@ -3,6 +3,8 @@ import 'package:iconsax/iconsax.dart';
 import 'package:sigmatech/common/widgets/appbar/appbar.dart';
 import 'package:sigmatech/common/widgets/products.cart/cart_menu_icon.dart';
 
+import '../cart/cart.dart';
+
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
@@ -26,7 +28,10 @@ class HomeScreen extends StatelessWidget {
           ],
         ),
         actions: [
-          TCartCounterIcon(onPressed: (){}),
+          TCartCounterIcon(onPressed: (){Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => CartPage()),
+          );}),
         ],
       ),
       body: SingleChildScrollView(
