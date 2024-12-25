@@ -1,132 +1,172 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:iconsax/iconsax.dart';
+import 'package:intl/intl.dart'; // Để format giá tiền
 import 'package:sigmatech/common/widgets/appbar/appbar.dart';
 import 'package:sigmatech/common/widgets/products.cart/cart_menu_icon.dart';
-import 'package:sigmatech/utils/constants/colors.dart';
-import 'package:sigmatech/utils/helpers/helper_functions.dart';
+import 'package:sigmatech/features/shop/screens/cart/cart.dart';
+import 'package:sigmatech/features/shop/screens/store/LaptopDetailScreen-Implementation.dart';
+import 'package:sigmatech/features/shop/screens/store/widget/LaptopService.dart';
+
+import '../../../../utils/constants/colors.dart';
 
 class StoreScreen extends StatelessWidget {
-  const StoreScreen({super.key});
+  final LaptopService laptopService = LaptopService.instance;
+
+  StoreScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final dark = THelperFunctions.isDarkMode(context);
     return Scaffold(
       appBar: TAppBar(
-        title: Text( 'Store', style: Theme.of(context).textTheme.headlineMedium),
-        actions: [
-          TCartCounterIcon(onPressed: (){}),
-        ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
+        title: const Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            TextField(
-              decoration: InputDecoration(
-                prefixIcon: Icon(Icons.search, color: dark ? Colors.white : Colors.grey),
-                hintText: 'Search in Store',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide.none,
-                ),
-                filled: true,
-                fillColor: dark ? TColors.black.withOpacity(0.1) : Colors.grey[200],
-              ),
-            ),
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  'Featured Brands',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () {},
-                  child: const Text(
-                    'View all',
-                    style: TextStyle(
-                      color: Colors.blue,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Expanded(
-              child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 3 / 2,
-                  crossAxisSpacing: 12,
-                  mainAxisSpacing: 12,
-                ),
-                itemCount: 4,
-                itemBuilder: (context, index) {
-                  return const BrandCard();
-                },
-              ),
+            Text(
+              'Danh mục sản phẩm',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class BrandCard extends StatelessWidget {
-  const BrandCard({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
-            blurRadius: 8,
-            offset: const Offset(0, 4),
-          ),
+        actions: [
+          TCartCounterIcon(onPressed: (){Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => CartPage()),
+          );}),
         ],
       ),
-      child: const Padding(
-        padding: EdgeInsets.all(12.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.checkroom,
-              size: 36,
-              color: Colors.black,
-            ),
-            SizedBox(height: 8),
-            Text(
-              'Nike',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
+      body: Obx(() {
+        if (laptopService.isLoading.value) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        if (laptopService.laptops.isEmpty) {
+          return const Center(child: Text('Không có sản phẩm nào.'));
+        }
+
+        return GridView.builder(
+          padding: const EdgeInsets.all(8.0),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2, // Số cột
+            crossAxisSpacing: 8.0,
+            mainAxisSpacing: 8.0,
+            childAspectRatio: 0.75, // Tỷ lệ khung hình của từng ô
+          ),
+          itemCount: laptopService.laptops.length,
+          itemBuilder: (context, index) {
+            final laptop = laptopService.laptops[index];
+
+            final name = laptop['name'] ?? 'Không rõ tên';
+            final brand = laptop['brand'] ?? 'Không rõ thương hiệu';
+            final price = int.tryParse(laptop['price'] ?? '0') ?? 0;
+            final imageUrl = 'https://6ma.zapto.org' + laptop['image1'] ?? 'https://via.placeholder.com/150';
+
+            return GestureDetector(
+              onTap: () {
+                // Điều hướng đến màn hình chi tiết
+                Get.to(() => LaptopDetailScreen(), arguments: laptop['id']);
+              },
+              child: Card(
+                elevation: 4.0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+                child: Stack(
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Hình ảnh sản phẩm
+                        ClipRRect(
+                          borderRadius: const BorderRadius.vertical(
+                              top: Radius.circular(12.0)),
+                          child: Image.network(
+                            imageUrl,
+                            height: 120,
+                            width: double.infinity,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return const Icon(Icons.error, size: 50);
+                            },
+                          ),
+                        ),
+                        // Thông tin sản phẩm
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                name,
+                                style: const TextStyle(
+                                  fontSize: 15.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              const SizedBox(height: 4.0),
+                              Text(
+                                brand,
+                                style: const TextStyle(
+                                  fontSize: 14.0,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                              const SizedBox(height: 8.0),
+                              Text(
+                                '${NumberFormat.currency(locale: 'vi', symbol: '', decimalDigits: 0).format(price)} VNĐ',
+                                style: const TextStyle(
+                                  fontSize: 15.0,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.red,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    // Icon trái tim ở góc trên phải
+                    Positioned(
+                      top: 1.0,
+                      right: 1.0,
+                      child: IconButton(
+                        icon: const Icon(Icons.favorite_border),
+                        color: Colors.red,
+                        onPressed: () {
+                          // Thêm vào danh sách yêu thích
+                          Get.snackbar('Wishlist', 'Đã thêm vào yêu thích!');
+                        },
+                      ),
+                    ),
+                    // Icon dấu cộng ở góc dưới phải
+                    Positioned(
+                      bottom: 1.0,
+                      right: 1.0,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          shape: const CircleBorder(),
+                          padding: const EdgeInsets.all(10),
+                           // Màu nền của nút
+                        ),
+                        onPressed: () {
+                          // Thêm vào giỏ hàng
+                          Get.snackbar('Giỏ hàng', 'Đã thêm vào giỏ hàng!');
+                        },
+                        child: const Icon(
+                          Icons.add,
+                          size: 20,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            SizedBox(height: 4),
-            Text(
-              '256 products',
-              style: TextStyle(
-                fontSize: 12,
-                color: Colors.grey,
-              ),
-            ),
-          ],
-        ),
-      ),
+            );
+          },
+        );
+      }),
     );
   }
 }

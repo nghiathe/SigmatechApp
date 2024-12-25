@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
@@ -62,7 +63,7 @@ class UserProfileController extends GetxController {
       await deviceStorage.write('isLoggedIn', false);
 
       _user.value = null;
-      TLoaders.errorSnackBar(
+      TLoaders.successSnackBar(
         title: 'Đăng xuất thành công.',
         message: 'Bạn đã đăng xuất khỏi thiết bị này.',
       );
@@ -74,10 +75,7 @@ class UserProfileController extends GetxController {
       );
     }
   }
-
-  Future<void> fetchCart() async {
-
+  void isDarkMode(bool value) {
+    deviceStorage.write('isDarkMode', value);
   }
-
-
 }

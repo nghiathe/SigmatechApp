@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:sigmatech/features/shop/controllers/userprofile/user_profile_controller.dart';
-import 'package:sigmatech/features/shop/screens/userprofile/widgets/AddressScreen.dart';
+import 'package:sigmatech/features/shop/screens/userprofile/widgets/address.dart';
 import 'package:sigmatech/utils/constants/colors.dart';
+import 'package:sigmatech/utils/constants/sizes.dart';
 import 'package:sigmatech/utils/helpers/helper_functions.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -90,19 +91,14 @@ class ProfileScreen extends StatelessWidget {
   List<Widget> _buildAccountSettings(UserProfileController controller) {
     return [
       _buildListTile(
-          Iconsax.home, 'Địa chỉ của tôi', 'Thiết lập địa chỉ giao hàng', 
-          () {
-            Get.to(() => const AddressScreen());
-          }),
+        Iconsax.home, 'Địa chỉ của tôi', 'Thiết lập địa chỉ giao hàng', 
+        () {
+          Get.to(() => const AddressScreen());
+        }),
       _buildListTile(Iconsax.shopping_cart, 'Giỏ hàng',
           'Thêm, xóa sản phẩm và thanh toán', null),
       _buildListTile(Iconsax.box, 'Đơn hàng của tôi',
           'Đơn hàng đang xử lý và đã hoàn tất', null),
-      _buildListTile(Iconsax.wallet, 'Tài khoản ngân hàng',
-          'Rút tiền về tài khoản đã liên kết', null),
-      _buildListTile(Iconsax.discount_circle, 'Mã giảm giá',
-          'Danh sách các mã giảm giá có sẵn', null),
-      _buildListTile(Iconsax.notification, 'Thông báo', 'Tùy chỉnh thông báo', null),
       _buildListTile(Iconsax.lock, 'Quyền riêng tư',
           'Quản lý quyền riêng tư và kết nối tài khoản', null),
       _buildListTile(Iconsax.logout, 'Đăng xuất',
@@ -112,28 +108,17 @@ class ProfileScreen extends StatelessWidget {
 
   List<Widget> _buildAppSettings(bool darkMode) {
     return [
-      _buildListTile(
-          Iconsax.cloud, 'Tải dữ liệu', 'Đồng bộ dữ liệu với Cloud Firebase', null),
-      SwitchListTile(
-        value: true,
-        onChanged: (value) {},
-        title: const Text('Định vị địa lý'),
-        subtitle: const Text('Nhận gợi ý dựa trên vị trí của bạn'),
-        activeColor: TColors.primary,
-      ),
-      SwitchListTile(
-        value: false,
-        onChanged: (value) {},
-        title: const Text('Chế độ an toàn'),
-        subtitle: const Text('Kết quả tìm kiếm an toàn cho mọi độ tuổi'),
-        activeColor: TColors.primary,
-      ),
-      SwitchListTile(
-        value: false,
-        onChanged: (value) {},
-        title: const Text('Hình ảnh chất lượng cao'),
-        subtitle: const Text('Hiển thị hình ảnh với chất lượng cao nhất'),
-        activeColor: TColors.primary,
+      ListTile(
+        leading: const Icon(Iconsax.moon, color: TColors.primary,),
+        title: const Text('Dark Mode'),
+        subtitle: const Text('Đã có chế độ tối cho bạn!'),
+        trailing: Switch(
+          value: darkMode,
+          onChanged: (value) {
+            // Thêm logic để thay đổi dark mode
+          },
+          activeColor: TColors.primary,
+        ),
       ),
     ];
   }
@@ -142,9 +127,9 @@ class ProfileScreen extends StatelessWidget {
     return ListTile(
       leading: Icon(icon, size: 28, color: Colors.blueAccent),
       title: Text(title,
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+          style: const TextStyle(fontSize: TSizes.fontSizeMd, fontWeight: FontWeight.w500)),
       subtitle: Text(subtitle,
-          style: const TextStyle(fontSize: 14, color: Colors.grey)),
+          style: const TextStyle(fontSize: TSizes.fontSizeSm, color: Colors.grey)),
       onTap: onTap,
     );
   }

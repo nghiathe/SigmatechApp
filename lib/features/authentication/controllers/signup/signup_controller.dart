@@ -46,12 +46,6 @@ class SignupController extends GetxController {
           title: 'Đăng ký không thành công.',
           message: 'Vui lòng kiểm tra lại thông tin đăng ký.');
         return;
-        // final name = this.name.text.trim();
-        // final email = this.email.text.trim();
-        // final phone = this.phone.text.trim();
-        // final password = this.password.text.trim();
-        // final passwordConfirm = this.passwordConfirm.text.trim();
-        // await AuthenticationRepository.instance.registerUser(name, email, phone, password, passwordConfirm);
       }
 
       final registerResponse = await AuthenticationRepository.instance
