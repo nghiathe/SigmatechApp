@@ -78,4 +78,19 @@ class CartController {
       throw Exception('Không thể xóa sản phẩm khỏi giỏ hàng');
     }
   }
+  static Future<int> getCartCount(String token) async {
+    final response = await http.get(
+      Uri.parse('$baseUrl/cart/count'),
+      headers: {'Authorization': 'Bearer $token'},
+    );
+
+    if (response.statusCode == 200) {
+      // Giả sử API trả về dữ liệu dạng { "cartItemCount": 4 }
+      var data = json.decode(response.body);
+      return data['cartItemCount'] ?? 0;  // Trả về giá trị 'cartItemCount'
+    } else {
+      throw Exception('Không thể lấy số lượng sản phẩm');
+    }
+  }
+
 }

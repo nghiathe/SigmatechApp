@@ -204,7 +204,7 @@ class _CartScreenState extends State<CartScreen> {
                                       ),
                                       // Giá sản phẩm
                                       Text(
-                                        '${NumberFormat.currency(locale: 'vi', symbol: '', decimalDigits: 0).format(int.tryParse(item.dealPrice) ?? 0)} VND',
+                                        '${NumberFormat.currency(locale: 'vi', symbol: '', decimalDigits: 0).format(int.tryParse(item.dealPrice) ?? 0)}đ',
                                         style: TextStyle(fontSize: 16, color: Colors.red, fontWeight: FontWeight.bold),
                                       ),
                                     ],
