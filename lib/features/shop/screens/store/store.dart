@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart'; // Để format giá tiền
 import 'package:sigmatech/common/widgets/appbar/appbar.dart';
 import 'package:sigmatech/common/widgets/products.cart/cart_menu_icon.dart';
@@ -175,8 +176,16 @@ class StoreScreen extends StatelessWidget {
                             right: 1.0,
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                shape: const CircleBorder(),
-                                padding: const EdgeInsets.all(10),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(12), // Góc trên bên trái
+                                    bottomRight: Radius.circular(12), // Góc dưới bên phải
+                                    topRight: Radius.zero, // Các góc khác vuông
+                                    bottomLeft: Radius.zero,
+                                  ),
+                                ),
+                                padding: EdgeInsets.zero, // Loại bỏ padding mặc định
+                                minimumSize: const Size(40, 40), // Kích thước nhỏ hơn
                               ),
                               onPressed: () async {
                                 String token = GetStorage().read('authToken'); // Lấy token từ bộ nhớ
@@ -193,12 +202,14 @@ class StoreScreen extends StatelessWidget {
                                 );
                               },
                               child: const Icon(
-                                Icons.add,
-                                size: 20,
-                                color: Colors.white,
+                                Iconsax.add,
+                                color: TColors.white,
+                                size: 20, // Kích thước icon nhỏ hơn
                               ),
                             ),
                           ),
+
+
                         ],
                       ),
                     ),
