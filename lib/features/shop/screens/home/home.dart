@@ -1,18 +1,29 @@
 import 'package:flutter/material.dart';
+
 import 'package:get_storage/get_storage.dart';
 import 'package:iconsax/iconsax.dart';
+
+import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+
 import 'package:sigmatech/common/widgets/appbar/appbar.dart';
 import 'package:sigmatech/common/widgets/products.cart/cart_menu_icon.dart';
-
-import '../cart/cart.dart';
+import 'package:sigmatech/features/shop/screens/cart/cart.dart';
+import 'package:sigmatech/features/shop/screens/home/widgets/BrandLaptopScreen.dart';
+import 'package:sigmatech/features/shop/screens/store/LaptopDetailScreen-Implementation.dart';
+import 'package:sigmatech/features/shop/screens/store/widget/LaptopService.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  final LaptopService laptopService = LaptopService.instance;
+
+  HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+
     final screenWidth = MediaQuery.of(context).size.width;
     final deviceStorage = GetStorage();
+
     return Scaffold(
       appBar: TAppBar(
         title: const Column(
@@ -29,29 +40,37 @@ class HomeScreen extends StatelessWidget {
           ],
         ),
         actions: [
+
           TCartCounterIcon(onPressed: (){Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => CartScreen()),
           );}),
+
+
         ],
       ),
-      body: SingleChildScrollView(
-        child: Padding(
+      body: Obx(() {
+        if (laptopService.isLoading.value) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        final laptops = laptopService.laptops;
+
+        return SingleChildScrollView(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Search Box
               Container(
-                width: screenWidth,
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   color: Colors.grey[200],
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Row(
-                  children: [
-                    Icon(Iconsax.search_normal, color: Colors.grey),
+                  children: const [
+                    Icon(Icons.search, color: Colors.grey),
                     SizedBox(width: 8),
                     Text(
                       'Search in Store',
@@ -63,261 +82,140 @@ class HomeScreen extends StatelessWidget {
 
               const SizedBox(height: 20),
 
-              // Popular Categories
-              Text(
-                'Popular Categories',
+              // Brand Laptop
+              const Text(
+                'Brand Laptop',
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 12),
-              SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: List.generate(8, (index) => _buildCategoryItem()),
+              SizedBox(
+                height: 95, // Điều chỉnh chiều cao
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+
+                  children: [
+                    _buildBrandItem('Dell', 'https://example.com/dell.png', context),
+                    _buildBrandItem('Asus', 'https://example.com/asus.png', context),
+                    _buildBrandItem('Lenovo', 'https://example.com/lenovo.png', context),
+                    _buildBrandItem('Acer', 'https://example.com/Acer.png', context),
+                  ],
                 ),
               ),
 
-              const SizedBox(height: 20),
+              const SizedBox(height: 30),
 
-              // Sneakers of the Week
-              Text(
+              // Laptop of the Week
+              const Text(
                 'Laptop of the Week',
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 12),
-              Container(
-                width: screenWidth,
-                height: 180,
-                decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  borderRadius: BorderRadius.circular(16),
+              GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 8,
+                  mainAxisSpacing: 8,
+                  childAspectRatio: 0.75,
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      width: 300, // Chiều rộng tối đa của ảnh
-                      height: 300, // Chiều cao tối đa của ảnh
-                      child: Image.network(
-                        'https://6ma.zapto.org/assets/img/products/laptops/gaming/1/Image1.jpg',
-                        fit: BoxFit.cover, // Đảm bảo ảnh vừa khít trong kích thước giới hạn
+                itemCount: laptops.length > 10 ? 10 : laptops.length, // Hiển thị tối đa 10 laptop
+                itemBuilder: (context, index) {
+                  final laptop = laptops[index];
+
+                  final name = laptop['name'] ?? 'Unknown';
+                  final brand = laptop['brand'] ?? 'Unknown';
+                  final price = int.tryParse(laptop['price'] ?? '0') ?? 0;
+                  final imageUrl = 'https://6ma.zapto.org' + laptop['image1'] ?? 'https://via.placeholder.com/150';
+
+                  return GestureDetector(
+                    onTap: () {
+                      Get.to(() => LaptopDetailScreen(), arguments: laptop['id']);
+                    },
+                    child: Card(
+                      elevation: 4,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Image
+                          ClipRRect(
+                            borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+                            child: Image.network(
+                              imageUrl,
+                              height: 120,
+                              width: double.infinity,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return const Icon(Icons.error, size: 50);
+                              },
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  name,
+                                  style: const TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  brand,
+                                  style: const TextStyle(fontSize: 14, color: Colors.grey),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  '${NumberFormat.currency(locale: 'vi', symbol: '', decimalDigits: 0).format(price)} VNĐ',
+                                  style: const TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.red,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 20),
-
-              //Featured Product
-
-              Container(
-                width: screenWidth,
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.grey[200],
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Row(
-                  children: [
-                    // Giới hạn kích thước của ảnh
-                    SizedBox(
-                      width: 200, // Chiều rộng tối đa của ảnh
-                      height: 100, // Chiều cao tối đa của ảnh
-                      child: Image.network(
-                        'https://6ma.zapto.org/assets/img/products/laptops/gaming/1/Image1.jpg',
-                        fit: BoxFit.cover, // Đảm bảo ảnh vừa khít trong kích thước giới hạn
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Nike Air Max',
-                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          '\$150',
-                          style: TextStyle(fontSize: 14, color: Colors.grey),
-                        ),
-                      ],
-                    ),
-                    Spacer(),
-                    Icon(Iconsax.heart, color: Colors.grey),
-                  ],
-                ),
+                  );
+                },
               ),
             ],
           ),
-
-        ),
-      ),
+        );
+      }),
     );
   }
 
-  Widget _buildCategoryItem() {
-    return Padding(
-      padding: const EdgeInsets.only(right: 8.0),
+  Widget _buildBrandItem(String brand, String imageUrl, BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        // Điều hướng đến trang chứa danh sách laptop theo thương hiệu
+        Get.to(() => BrandLaptopScreen(brand: brand));
+      },
       child: Column(
         children: [
           CircleAvatar(
-            radius: 30,
-            backgroundColor: Colors.grey[300],
-            child: Icon(Iconsax.shop, color: Colors.black),
+            radius: 35, // Điều chỉnh kích thước
+            backgroundImage: NetworkImage(imageUrl),
+            backgroundColor: Colors.grey[200],
           ),
-          const SizedBox(height: 4),
-          Text('Shoes', style: TextStyle(fontSize: 12)),
-        ],
-      ),
-    );
-  }
-
-}
-class WishlistCard extends StatelessWidget {
-  final String imageUrl;
-  final String title;
-  final String brand;
-  final double price;
-  final int discount;
-
-  const WishlistCard({
-    super.key,
-    required this.imageUrl,
-    required this.title,
-    required this.brand,
-    required this.price,
-    required this.discount,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final darkMode = MediaQuery.of(context).platformBrightness == Brightness.dark;
-
-    return Container(
-      decoration: BoxDecoration(
-        color: darkMode ? Colors.grey[900] : Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
-            blurRadius: 8,
-            offset: const Offset(0, 4),
+          const SizedBox(height: 6),
+          Text(
+            brand,
+            style: const TextStyle(fontSize: 13),
           ),
         ],
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Stack(
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: Image.network(
-                    imageUrl,
-                    height: 120,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                    loadingBuilder: (context, child, loadingProgress) {
-                      if (loadingProgress == null) return child;
-                      return Center(
-                        child: CircularProgressIndicator(
-                          value: loadingProgress.expectedTotalBytes != null
-                              ? loadingProgress.cumulativeBytesLoaded / (loadingProgress.expectedTotalBytes ?? 1)
-                              : null,
-                        ),
-                      );
-                    },
-                    errorBuilder: (context, error, stackTrace) {
-                      return Container(
-                        height: 120,
-                        color: Colors.grey[300],
-                        child: const Icon(
-                          Icons.broken_image,
-                          size: 50,
-                          color: Colors.grey,
-                        ),
-                      );
-                    },
-                  ),
-                ),
-                Positioned(
-                  top: 8,
-                  left: 8,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: Colors.yellow,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Text(
-                      '$discount%',
-                      style: const TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  top: 8,
-                  right: 8,
-                  child: Icon(
-                    Iconsax.heart5,
-                    color: Colors.red,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 1),
-            Text(
-              title,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 1),
-            Text(
-              brand,
-              style: const TextStyle(
-                fontSize: 12,
-                color: Colors.grey,
-              ),
-            ),
-            const SizedBox(height: 2),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  '\$$price',
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.all(4),
-                  decoration: BoxDecoration(
-                    color: darkMode ? Colors.white : Colors.black,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    Iconsax.add,
-                    size: 20,
-                    color: darkMode ? Colors.black : Colors.white,
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
       ),
     );
   }

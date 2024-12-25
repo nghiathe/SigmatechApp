@@ -7,12 +7,14 @@ import 'package:sigmatech/common/widgets/products.cart/cart_menu_icon.dart';
 import 'package:sigmatech/features/shop/screens/cart/cart.dart';
 import 'package:sigmatech/features/shop/screens/store/LaptopDetailScreen-Implementation.dart';
 import 'package:sigmatech/features/shop/screens/store/widget/LaptopService.dart';
+import 'package:sigmatech/features/shop/screens/wishlist/widget/WishlistService.dart';
 
 import '../../../../utils/constants/colors.dart';
 import '../../controllers/cart/cart_controller.dart';
 
 class StoreScreen extends StatelessWidget {
   final LaptopService laptopService = LaptopService.instance;
+  final WishlistService wishlistService = Get.put(WishlistService());
 
   StoreScreen({Key? key}) : super(key: key);
 
@@ -132,14 +134,22 @@ class StoreScreen extends StatelessWidget {
                     Positioned(
                       top: 1.0,
                       right: 1.0,
-                      child: IconButton(
-                        icon: const Icon(Icons.favorite_border),
-                        color: Colors.red,
-                        onPressed: () {
-                          // Thêm vào danh sách yêu thích
-                          Get.snackbar('Wishlist', 'Đã thêm vào yêu thích!');
-                        },
-                      ),
+                      child: Obx(() {
+                        final isFavorite = wishlistService.isInWishlist(laptop['id']);
+                        return IconButton(
+                          icon: Icon(
+                            isFavorite ? Icons.favorite : Icons.favorite_border,
+                            color: Colors.red,
+                          ),
+                          onPressed: () {
+                            if (isFavorite) {
+                              wishlistService.removeFromWishlist(laptop['id']);
+                            } else {
+                              wishlistService.addToWishlist(laptop['id']);
+                            }
+                          },
+                        );
+                      }),
                     ),
                     // Icon dấu cộng ở góc dưới phải
                     Positioned(
