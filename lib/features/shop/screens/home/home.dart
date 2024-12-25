@@ -95,7 +95,7 @@ class HomeScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     SizedBox(
-                      width: 750, // Chiều rộng tối đa của ảnh
+                      width: 300, // Chiều rộng tối đa của ảnh
                       height: 300, // Chiều cao tối đa của ảnh
                       child: Image.network(
                         'https://6ma.zapto.org/assets/img/products/laptops/gaming/1/Image1.jpg',
