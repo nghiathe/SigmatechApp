@@ -46,7 +46,7 @@ class LaptopDetailScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(12.0),
                       child: Image.network(
                         'https://6ma.zapto.org' + laptop['image1'] ?? 'https://via.placeholder.com/150',
-                        height: 200,
+                        height: 500,
                         width: double.infinity,
                         fit: BoxFit.cover,
                         errorBuilder: (context, error, stackTrace) {
