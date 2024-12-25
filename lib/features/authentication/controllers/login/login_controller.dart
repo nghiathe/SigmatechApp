@@ -8,6 +8,7 @@ import 'package:sigmatech/utils/popups/full_screen_loader.dart';
 import 'package:sigmatech/utils/popups/loaders.dart';
 
 class LoginController extends GetxController {
+  static LoginController get instance => Get.find();
   final rememberMe = false.obs;
   final hidePassword = true.obs;
   final localStorage = GetStorage();

@@ -1,92 +1,115 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:sigmatech/features/shop/controllers/userprofile/user_profile_controller.dart';
 import 'package:sigmatech/utils/constants/colors.dart';
+import 'package:sigmatech/utils/helpers/helper_functions.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final darkMode = Theme.of(context).brightness == Brightness.dark;
-
+    final dark = THelperFunctions.isDarkMode(context);
+    final controller = Get.put(UserProfileController());
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
         title: const Text('Tài khoản', style: TextStyle(fontSize: 20)),
-        backgroundColor: darkMode ? TColors.black : Colors.white,
-        foregroundColor: darkMode ? Colors.white : Colors.black,
+        backgroundColor: dark ? TColors.black : Colors.white,
+        foregroundColor: dark ? Colors.white : Colors.black,
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // User Info Section
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: darkMode ? TColors.black : TColors.lightGrey,
-                borderRadius: BorderRadius.circular(12),
+      body: Obx(() {
+        final user = controller.user;
+        if (user == null) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        return SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // User Info Section
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: dark ? TColors.black : TColors.lightGrey,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Row(
+                  children: [
+                    const CircleAvatar(
+                      radius: 30,
+                      backgroundImage: NetworkImage(
+                          'https://random.imagecdn.app/150/150'), // Change to your avatar image
+                    ),
+                    const SizedBox(width: 16),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          user.name,
+                          style: const TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          user.email,
+                          style: const TextStyle(color: Colors.grey),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-              child: Row(
-                children: [
-                  const CircleAvatar(
-                    radius: 30,
-                      backgroundImage: NetworkImage('https://6ma.zapto.org/assets/img/products/laptops/gaming/1/Image1.jpg') // Change to your avatar image
-                  ),
-                  const SizedBox(width: 16),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
-                      Text(
-                        'SKIBIDI',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                      SizedBox(height: 4),
-                      Text(
-                        'skibidi@gmail.com',
-                        style: TextStyle(color: Colors.grey),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
 
             const SizedBox(height: 24),
 
             // Account Settings Section
-            const Text('Cài đặt tài khoản', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            const Text('Cài đặt tài khoản',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
             const SizedBox(height: 16),
-            ..._buildAccountSettings(),
+            ..._buildAccountSettings(controller),
 
             const SizedBox(height: 24),
 
             // App Settings Section
-            const Text('Cài đặt ứng dụng', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            const Text('Cài đặt ứng dụng',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
             const SizedBox(height: 16),
-            ..._buildAppSettings(darkMode),
-          ],
-        ),
-      ),
+            ..._buildAppSettings(dark),
+            ],
+          ),
+        );
+      }),
     );
   }
 
-  List<Widget> _buildAccountSettings() {
+  List<Widget> _buildAccountSettings(UserProfileController controller) {
     return [
-      _buildListTile(Iconsax.home, 'Địa chỉ của tôi', 'Thiết lập địa chỉ giao hàng'),
-      _buildListTile(Iconsax.shopping_cart, 'Giỏ hàng', 'Thêm, xóa sản phẩm và thanh toán'),
-      _buildListTile(Iconsax.box, 'Đơn hàng của tôi', 'Đơn hàng đang xử lý và đã hoàn tất'),
-      _buildListTile(Iconsax.wallet, 'Tài khoản ngân hàng', 'Rút tiền về tài khoản đã liên kết'),
-      _buildListTile(Iconsax.discount_circle, 'Mã giảm giá', 'Danh sách các mã giảm giá có sẵn'),
-      _buildListTile(Iconsax.notification, 'Thông báo', 'Tùy chỉnh thông báo'),
-      _buildListTile(Iconsax.lock, 'Quyền riêng tư', 'Quản lý quyền riêng tư và kết nối tài khoản'),
+      _buildListTile(
+          Iconsax.home, 'Địa chỉ của tôi', 'Thiết lập địa chỉ giao hàng', null),
+      _buildListTile(Iconsax.shopping_cart, 'Giỏ hàng',
+          'Thêm, xóa sản phẩm và thanh toán', null),
+      _buildListTile(Iconsax.box, 'Đơn hàng của tôi',
+          'Đơn hàng đang xử lý và đã hoàn tất', null),
+      _buildListTile(Iconsax.wallet, 'Tài khoản ngân hàng',
+          'Rút tiền về tài khoản đã liên kết', null),
+      _buildListTile(Iconsax.discount_circle, 'Mã giảm giá',
+          'Danh sách các mã giảm giá có sẵn', null),
+      _buildListTile(Iconsax.notification, 'Thông báo', 'Tùy chỉnh thông báo', null),
+      _buildListTile(Iconsax.lock, 'Quyền riêng tư',
+          'Quản lý quyền riêng tư và kết nối tài khoản', null),
+      _buildListTile(Iconsax.logout, 'Đăng xuất',
+          'Đăng xuất tài khoản khỏi thiết bị này', () => controller.logoutUser()),
     ];
   }
 
   List<Widget> _buildAppSettings(bool darkMode) {
     return [
-      _buildListTile(Iconsax.cloud, 'Tải dữ liệu', 'Đồng bộ dữ liệu với Cloud Firebase'),
+      _buildListTile(
+          Iconsax.cloud, 'Tải dữ liệu', 'Đồng bộ dữ liệu với Cloud Firebase', null),
       SwitchListTile(
         value: true,
         onChanged: (value) {},
@@ -111,12 +134,14 @@ class ProfileScreen extends StatelessWidget {
     ];
   }
 
-  Widget _buildListTile(IconData icon, String title, String subtitle) {
+  Widget _buildListTile(IconData icon, String title, String subtitle, VoidCallback? onTap) {
     return ListTile(
       leading: Icon(icon, size: 28, color: Colors.blueAccent),
-      title: Text(title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-      subtitle: Text(subtitle, style: const TextStyle(fontSize: 14, color: Colors.grey)),
-      onTap: () {},
+      title: Text(title,
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+      subtitle: Text(subtitle,
+          style: const TextStyle(fontSize: 14, color: Colors.grey)),
+      onTap: onTap,
     );
   }
 }
