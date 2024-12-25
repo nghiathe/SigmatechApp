@@ -46,12 +46,6 @@ class HomeScreen extends StatelessWidget {
             MaterialPageRoute(builder: (context) => CartScreen()),
           );}),
 
-          TCartCounterIcon(onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => CartScreen()),
-            );
-          }),
 
         ],
       ),
