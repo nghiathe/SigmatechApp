@@ -30,7 +30,7 @@ class StoreScreen extends StatelessWidget {
         actions: [
           TCartCounterIcon(onPressed: (){Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => CartPage()),
+            MaterialPageRoute(builder: (context) => CartScreen()),
           );}),
         ],
       ),
