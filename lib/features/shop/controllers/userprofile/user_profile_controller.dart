@@ -17,6 +17,9 @@ class UserProfileController extends GetxController {
 
   User? get user => _user.value;
 
+  String get userAddress {
+    return _user.value?.address ?? 'Chưa cập nhật địa chỉ';
+  }
   @override
   void onInit() {
     super.onInit();
@@ -59,7 +62,10 @@ class UserProfileController extends GetxController {
       await deviceStorage.write('isLoggedIn', false);
 
       _user.value = null;
-
+      TLoaders.errorSnackBar(
+        title: 'Đăng xuất thành công.',
+        message: 'Bạn đã đăng xuất khỏi thiết bị này.',
+      );
       Get.offAll(() => const LoginScreen());
     } catch (e) {
       TLoaders.errorSnackBar(
@@ -68,4 +74,10 @@ class UserProfileController extends GetxController {
       );
     }
   }
+
+  Future<void> fetchCart() async {
+
+  }
+
+
 }

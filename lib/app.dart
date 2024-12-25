@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
       theme: TAppTheme.lightTheme,
       darkTheme: TAppTheme.darkTheme,
       initialBinding: GeneralBindings(),
-      home: InitialScreen(),
+      home: const InitialScreen(),
     );
   }
 }

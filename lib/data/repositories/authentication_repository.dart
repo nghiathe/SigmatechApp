@@ -58,4 +58,11 @@ class AuthenticationRepository extends GetxController {
     // Trả về response
     return response;
   }
+    Future<Map<String, dynamic>?> logoutUser() async {
+    final response = await _authService.logout();
+
+    if (response == null) return null;
+    // Trả về response
+    return response;
+  }
 }

@@ -108,4 +108,39 @@ class AuthService {
       return null; // Trả về null trong trường hợp lỗi
     }
   }
+
+  Future<Map<String, dynamic>?> logout() async {
+    try {
+      final deviceStorage = GetStorage();
+      final token = deviceStorage.read('authToken');
+      final response = await http.post(
+        Uri.parse('$baseUrl/logout'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (response.statusCode == 200 ||
+          response.statusCode == 201 ||
+          response.statusCode == 302) {
+        return jsonDecode(response.body);
+      } else {
+        // Hiển thị thông báo lỗi nếu đăng nhập không thành công
+        TLoaders.errorSnackBar(
+          title: 'Lỗi đăng xuất',
+          message: 'Đăng xuất không thành công.',
+        );
+        return null; // Trả về null để thông báo lỗi
+      }
+    } catch (e) {
+      // Hiển thị thông báo lỗi nếu có lỗi không mong muốn xảy ra
+      TLoaders.errorSnackBar(
+        title: 'Lỗi đăng xuất',
+        message: 'Đăng xuất không thành công.',
+      );
+      return null; // Trả về null trong trường hợp lỗi
+    }
+  }
 }

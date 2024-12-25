@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:sigmatech/features/shop/controllers/userprofile/user_profile_controller.dart';
+import 'package:sigmatech/features/shop/screens/userprofile/widgets/AddressScreen.dart';
 import 'package:sigmatech/utils/constants/colors.dart';
 import 'package:sigmatech/utils/helpers/helper_functions.dart';
 
@@ -89,7 +90,10 @@ class ProfileScreen extends StatelessWidget {
   List<Widget> _buildAccountSettings(UserProfileController controller) {
     return [
       _buildListTile(
-          Iconsax.home, 'Địa chỉ của tôi', 'Thiết lập địa chỉ giao hàng', null),
+          Iconsax.home, 'Địa chỉ của tôi', 'Thiết lập địa chỉ giao hàng', 
+          () {
+            Get.to(() => const AddressScreen());
+          }),
       _buildListTile(Iconsax.shopping_cart, 'Giỏ hàng',
           'Thêm, xóa sản phẩm và thanh toán', null),
       _buildListTile(Iconsax.box, 'Đơn hàng của tôi',
