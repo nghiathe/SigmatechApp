@@ -1,170 +1,152 @@
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
+
+import '../../controllers/cart/cart_controller.dart';
+import '../../models/cart_item.dart';
 
 
-class CartPage extends StatelessWidget {
-  final List<Map<String, dynamic>> cartItems = [
-    {
-      'name': 'Green Nike sports shoe',
-      'details': 'Color Green  Size EU 34',
-      'price': 134.0,
-      'image': 'assets/shoe.png', // Thay bằng đường dẫn ảnh của bạn
-      'quantity': 1,
-    },
-    {
-      'name': 'Blue T-shirt for all ages',
-      'details': 'ZARA',
-      'price': 35.0,
-      'image': 'assets/tshirt.png',
-      'quantity': 1,
-    },
-    {
-      'name': 'Nike Track suit red',
-      'details': 'Nike',
-      'price': 500.0,
-      'image': 'assets/tracksuit.png',
-      'quantity': 1,
-    },
-    {
-      'name': 'Nike Air Max Red & Black',
-      'details': 'Nike',
-      'price': 600.0,
-      'image': 'assets/airmax.png',
-      'quantity': 1,
-    },
-    {
-      'name': 'Iphone 14 pro 512gb',
-      'details': 'Apple',
-      'price': 1998.0,
-      'image': 'assets/iphone.png',
-      'quantity': 2,
-    },
-  ];
+class CartScreen extends StatefulWidget {
+  @override
+  _CartScreenState createState() => _CartScreenState();
+}
+
+class _CartScreenState extends State<CartScreen> {
+  late Future<List<CartItem>> _cartItems;
+  final deviceStorage = GetStorage();
+
+  @override
+  void initState() {
+    super.initState();
+    // Lấy token từ GetStorage
+    String token = deviceStorage.read('authToken');
+    _cartItems = CartController.getCartItems(token);
+  }
+
+  void updateQuantity(CartItem item, int newQuantity) async {
+    try {
+      String token = deviceStorage.read('authToken'); // Lấy token từ bộ nhớ
+      await CartController.updateCartItemQuantity(
+          token, item.productType, item.productId, newQuantity);
+
+      setState(() {
+        item.quantity = newQuantity; // Cập nhật số lượng trong UI
+      });
+    } catch (e) {
+      print('Lỗi khi cập nhật số lượng: $e');
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
-    double totalPrice = cartItems.fold(
-        0, (sum, item) => sum + item['price'] * item['quantity']);
-
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () {},
-        ),
-        title: const Text(
-          'Cart',
-          style: TextStyle(color: Colors.black),
-        ),
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              itemCount: cartItems.length,
-              itemBuilder: (context, index) {
-                final item = cartItems[index];
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      appBar: AppBar(title: Text('Giỏ Hàng')),
+      body: FutureBuilder<List<CartItem>>(
+        future: _cartItems,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          }
+
+          if (snapshot.hasError) {
+            return Center(child: Text('Đã có lỗi xảy ra'));
+          }
+
+          if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return Center(child: Text('Giỏ hàng của bạn đang trống.'));
+          }
+
+          return ListView.builder(
+            padding: EdgeInsets.all(8.0),
+            itemCount: snapshot.data!.length,
+            itemBuilder: (context, index) {
+              CartItem item = snapshot.data![index];
+              return Card(
+                margin: EdgeInsets.symmetric(vertical: 8.0),
+                elevation: 5,
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
                   child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Product image
-                      Container(
-                        height: 60,
-                        width: 60,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          image: DecorationImage(
-                            image: AssetImage(item['image']), // Thay bằng ảnh
-                            fit: BoxFit.cover,
-                          ),
+                      // Ảnh sản phẩm
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(8.0),
+                        child: Image.network(
+                          'https://6ma.zapto.org${item.image}',
+                          height: 100,
+                          width: 100,
+                          fit: BoxFit.cover,
                         ),
                       ),
-                      const SizedBox(width: 16),
-                      // Product details
+                      SizedBox(width: 12),
+                      // Chi tiết sản phẩm
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              item['name'],
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
+                              item.name,
+                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
                             ),
-                            const SizedBox(height: 4),
-                            Text(
-                              item['details'],
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.grey,
+                            SizedBox(height: 8),
+                            // Giá và số lượng theo hàng ngang
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                // Số lượng và nút tăng giảm
+                                Row(
+                                  children: [
+                                    IconButton(
+                                      icon: Icon(Icons.remove),
+                                      onPressed: () {
+                                        if (item.quantity > 1) {
+                                          updateQuantity(item, item.quantity - 1);
+                                        }
+                                      },
+                                    ),
+                                    Text(item.quantity.toString(), style: TextStyle(fontSize: 16)),
+                                    IconButton(
+                                      icon: Icon(Icons.add),
+                                      onPressed: () {
+                                        updateQuantity(item, item.quantity + 1);
+                                      },
+                                    ),
+                                  ],
+                                ),
+                                // Giá sản phẩm
+                                Text(
+                                  '${item.dealPrice} VND',
+                                  style: TextStyle(fontSize: 16, color: Colors.green, fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 8),
+                            // Nút xóa sản phẩm
+                            ElevatedButton(
+                              onPressed: () {
+                                // Thực hiện xóa sản phẩm
+                                setState(() {
+                                  snapshot.data!.removeAt(index);
+                                });
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.red, // Đặt màu nền
                               ),
+                              child: Text('Xóa sản phẩm'),
                             ),
                           ],
                         ),
                       ),
-                      // Quantity and price
-                      Column(
-                        children: [
-                          Row(
-                            children: [
-                              IconButton(
-                                icon: Icon(Icons.remove_circle_outline),
-                                onPressed: () {},
-                              ),
-                              Text('${item['quantity']}'),
-                              IconButton(
-                                icon: Icon(Icons.add_circle_outline),
-                                onPressed: () {},
-                              ),
-                            ],
-                          ),
-                          Text(
-                            '\$${item['price']}',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
                     ],
                   ),
-                );
-              },
-            ),
-          ),
-          // Checkout button
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
                 ),
-                padding: const EdgeInsets.symmetric(vertical: 16),
-              ),
-              onPressed: () {},
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Checkout \$${totalPrice.toStringAsFixed(2)}',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const Icon(Icons.arrow_forward, color: Colors.white),
-                ],
-              ),
-            ),
-          ),
-        ],
+              );
+            },
+          );
+        },
       ),
     );
   }

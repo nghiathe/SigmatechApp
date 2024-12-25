@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:sigmatech/common/widgets/appbar/appbar.dart';
 import 'package:sigmatech/common/widgets/products.cart/cart_menu_icon.dart';
@@ -11,7 +12,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-
+    final deviceStorage = GetStorage();
     return Scaffold(
       appBar: TAppBar(
         title: const Column(
@@ -30,7 +31,7 @@ class HomeScreen extends StatelessWidget {
         actions: [
           TCartCounterIcon(onPressed: (){Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => CartPage()),
+            MaterialPageRoute(builder: (context) => CartScreen()),
           );}),
         ],
       ),
