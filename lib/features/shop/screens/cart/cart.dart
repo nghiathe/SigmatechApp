@@ -1,11 +1,13 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
+import 'package:http/http.dart' as http;
 import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart';
 
 import '../../controllers/cart/cart_controller.dart';
 import '../../models/cart_item.dart';
+import '../order/order.dart';
 
 
 class CartScreen extends StatefulWidget {
@@ -82,7 +84,7 @@ class _CartScreenState extends State<CartScreen> {
   // Tính tổng tiền cho các sản phẩm được chọn
   int calculateTotal() {
     return selectedItems.fold(0, (total, item) {
-      return total + (int.tryParse(item.dealPrice) ?? 0) * item.quantity;
+      return total + (int.tryParse(item.price) ?? 0) * item.quantity;
     });
   }
 
@@ -204,7 +206,7 @@ class _CartScreenState extends State<CartScreen> {
                                       ),
                                       // Giá sản phẩm
                                       Text(
-                                        '${NumberFormat.currency(locale: 'vi', symbol: '', decimalDigits: 0).format(int.tryParse(item.dealPrice) ?? 0)}đ',
+                                        '${NumberFormat.currency(locale: 'vi', symbol: '', decimalDigits: 0).format(int.tryParse(item.price) ?? 0)}đ',
                                         style: TextStyle(fontSize: 16, color: Colors.red, fontWeight: FontWeight.bold),
                                       ),
                                     ],
@@ -262,12 +264,50 @@ class _CartScreenState extends State<CartScreen> {
                             style: ElevatedButton.styleFrom(
                               minimumSize: Size(200, 50), // Nút thanh toán có kích thước phù hợp
                             ),
-                            onPressed: () {
-                              // Xử lý thanh toán ở đây
-                              Get.snackbar('Thanh toán', 'Thanh toán thành công!');
+                            onPressed: () async {
+                              // Thu thập các sản phẩm đã chọn
+                              List<Map<String, dynamic>> selectedItemsData = selectedItems.map((item) {
+                                return {
+                                  'productType': item.productType,
+                                  'productId': item.productId,
+                                  'quantity': item.quantity,
+                                  'price': item.price
+                                };
+                              }).toList();
+
+                              try {
+                                // Gửi dữ liệu sản phẩm đã chọn đến API
+                                String token = deviceStorage.read('authToken');
+                                var response = await http.post(
+                                  Uri.parse('https://6ma.zapto.org/api/cart/order'), // Thay URL này bằng URL thực tế của bạn
+                                  headers: {
+                                    'Authorization': 'Bearer $token',
+                                    'Content-Type': 'application/json',
+                                  },
+                                  body: json.encode({'items': selectedItemsData}),
+                                );
+
+                                if (response.statusCode == 200) {
+                                  // Xử lý kết quả trả về từ API
+                                  var responseData = json.decode(response.body);
+                                  var cartItems = responseData['cartItems'];
+                                  // Chuyển đến trang thông tin đơn hàng hoặc xử lý tiếp theo
+                                  // Ví dụ: hiển thị thông tin sản phẩm đã chọn
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => OrderDetailScreen(cartItems: cartItems)),
+                                  );
+                                } else {
+                                  // Xử lý lỗi nếu có
+                                  print('Lỗi khi gửi yêu cầu: ${response.statusCode}');
+                                }
+                              } catch (e) {
+                                print('Lỗi khi gửi yêu cầu: $e');
+                              }
                             },
-                            child: Text('Thanh toán'),
-                          ),
+                            child: Text('Đặt hàng'),
+                          )
+
                         ],
                       ),
                     ),
