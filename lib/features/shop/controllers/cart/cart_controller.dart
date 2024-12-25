@@ -38,4 +38,44 @@ class CartController {
       throw Exception('Không thể cập nhật số lượng sản phẩm');
     }
   }
+  // Hàm thêm sản phẩm vào giỏ hàng
+  static Future<void> addToCart(
+      String token, String productType, int productId, int quantity, String name) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/cart'),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+      body: json.encode({
+        'product_type': productType,
+        'product_id': productId,
+        'quantity': quantity,
+        'name': name,
+      }),
+    );
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      // Nếu API trả về thành công, không cần ném Exception
+      print('Thêm vào giỏ hàng thành công: ${response.body}');
+      return;
+    } else {
+      // Chỉ ném Exception nếu xảy ra lỗi thực sự
+      print('Thêm vào giỏ hàng thất bại: ${response.body}');
+      throw Exception('Không thể thêm sản phẩm vào giỏ hàng');
+    }
+  }
+
+  // Hàm xóa sản phẩm khỏi giỏ hàng
+  static Future<void> removeFromCart(
+      String token, String productType, int productId) async {
+    final response = await http.delete(
+      Uri.parse('$baseUrl/cart/$productType/$productId'),
+      headers: {'Authorization': 'Bearer $token'},
+    );
+
+    if (response.statusCode != 200 ) {
+      throw Exception('Không thể xóa sản phẩm khỏi giỏ hàng');
+    }
+  }
 }

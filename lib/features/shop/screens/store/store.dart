@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart'; // Để format giá tiền
 import 'package:sigmatech/common/widgets/appbar/appbar.dart';
 import 'package:sigmatech/common/widgets/products.cart/cart_menu_icon.dart';
@@ -8,6 +9,7 @@ import 'package:sigmatech/features/shop/screens/store/LaptopDetailScreen-Impleme
 import 'package:sigmatech/features/shop/screens/store/widget/LaptopService.dart';
 
 import '../../../../utils/constants/colors.dart';
+import '../../controllers/cart/cart_controller.dart';
 
 class StoreScreen extends StatelessWidget {
   final LaptopService laptopService = LaptopService.instance;
@@ -149,9 +151,20 @@ class StoreScreen extends StatelessWidget {
                           padding: const EdgeInsets.all(10),
                            // Màu nền của nút
                         ),
-                        onPressed: () {
-                          // Thêm vào giỏ hàng
-                          Get.snackbar('Giỏ hàng', 'Đã thêm vào giỏ hàng!');
+                        onPressed: () async {
+                          String token = GetStorage().read('authToken'); // Lấy token từ bộ nhớ
+                          await CartController.addToCart(
+                            token,
+                            'laptops', // Loại sản phẩm (trong trường hợp này là laptops)
+                            laptop['id'], // ID sản phẩm
+                            1,
+                            laptop['name']
+                          );
+
+                          Get.snackbar(
+                            'Giỏ hàng',
+                            '${laptop['name']} đã được thêm vào giỏ hàng!'
+                          );
                         },
                         child: const Icon(
                           Icons.add,
