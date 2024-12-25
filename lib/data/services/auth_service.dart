@@ -14,7 +14,7 @@ class AuthService {
     }
     try {
       final response = await http.get(
-        Uri.parse('https://6ma.zapto.org/api/user'),
+        Uri.parse('$baseUrl/user'),
         headers: {
           'Authorization': 'Bearer $token',
           'Accept': 'application/json',
@@ -28,7 +28,6 @@ class AuthService {
         return null;
       }
     } catch (e) {
-      print('Error fetching user info: $e');
       return null;
     }
   }
@@ -44,7 +43,6 @@ class AuthService {
         'password': password,
         'password_confirmation': passwordConfirm,
       };
-      print(payload);
 
       final response = await http.post(
         Uri.parse('$baseUrl/register'),
@@ -106,6 +104,41 @@ class AuthService {
       TLoaders.errorSnackBar(
         title: 'Lỗi đăng nhập',
         message: 'Đã xảy ra lỗi trong quá trình đăng nhập.',
+      );
+      return null; // Trả về null trong trường hợp lỗi
+    }
+  }
+
+  Future<Map<String, dynamic>?> logout() async {
+    try {
+      final deviceStorage = GetStorage();
+      final token = deviceStorage.read('authToken');
+      final response = await http.post(
+        Uri.parse('$baseUrl/logout'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (response.statusCode == 200 ||
+          response.statusCode == 201 ||
+          response.statusCode == 302) {
+        return jsonDecode(response.body);
+      } else {
+        // Hiển thị thông báo lỗi nếu đăng nhập không thành công
+        TLoaders.errorSnackBar(
+          title: 'Lỗi đăng xuất',
+          message: 'Đăng xuất không thành công.',
+        );
+        return null; // Trả về null để thông báo lỗi
+      }
+    } catch (e) {
+      // Hiển thị thông báo lỗi nếu có lỗi không mong muốn xảy ra
+      TLoaders.errorSnackBar(
+        title: 'Lỗi đăng xuất',
+        message: 'Đăng xuất không thành công.',
       );
       return null; // Trả về null trong trường hợp lỗi
     }

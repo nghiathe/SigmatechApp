@@ -4,14 +4,14 @@ import 'package:iconsax/iconsax.dart';
 import 'package:sigmatech/common/widgets/appbar/appbar.dart';
 import 'package:sigmatech/common/widgets/products.cart/cart_menu_icon.dart';
 import 'package:sigmatech/utils/constants/colors.dart';
+import 'package:sigmatech/utils/helpers/helper_functions.dart';
 
 class StoreScreen extends StatelessWidget {
   const StoreScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final darkMode = MediaQuery.of(context).platformBrightness == Brightness.dark;
-
+    final dark = THelperFunctions.isDarkMode(context);
     return Scaffold(
       appBar: TAppBar(
         title: Text( 'Store', style: Theme.of(context).textTheme.headlineMedium),
@@ -20,20 +20,20 @@ class StoreScreen extends StatelessWidget {
         ],
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TextField(
               decoration: InputDecoration(
-                prefixIcon: Icon(Icons.search, color: darkMode ? Colors.white : Colors.grey),
+                prefixIcon: Icon(Icons.search, color: dark ? Colors.white : Colors.grey),
                 hintText: 'Search in Store',
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide.none,
                 ),
                 filled: true,
-                fillColor: darkMode ? TColors.black.withOpacity(0.1) : Colors.grey[200],
+                fillColor: dark ? TColors.black.withOpacity(0.1) : Colors.grey[200],
               ),
             ),
             const SizedBox(height: 20),
@@ -70,7 +70,7 @@ class StoreScreen extends StatelessWidget {
                 ),
                 itemCount: 4,
                 itemBuilder: (context, index) {
-                  return BrandCard();
+                  return const BrandCard();
                 },
               ),
             ),
@@ -98,8 +98,8 @@ class BrandCard extends StatelessWidget {
           ),
         ],
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
+      child: const Padding(
+        padding: EdgeInsets.all(12.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -108,16 +108,16 @@ class BrandCard extends StatelessWidget {
               size: 36,
               color: Colors.black,
             ),
-            const SizedBox(height: 8),
-            const Text(
+            SizedBox(height: 8),
+            Text(
               'Nike',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 4),
-            const Text(
+            SizedBox(height: 4),
+            Text(
               '256 products',
               style: TextStyle(
                 fontSize: 12,

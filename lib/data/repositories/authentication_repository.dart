@@ -21,9 +21,8 @@ class AuthenticationRepository extends GetxController {
   /// Điều hướng người dùng khi khởi động ứng dụng
   screenRedirect() async {
     final user = await _authService.currentUser;
-
     if (user != null) {
-      Get.to(() => const NavigationMenu());
+      Get.offAll(() => const NavigationMenu());
     } else {
       deviceStorage.writeIfNull('IsFirstTime', true);
       if (deviceStorage.read('IsFirstTime') != true) {
@@ -56,6 +55,13 @@ class AuthenticationRepository extends GetxController {
       // Lưu token vào local storage nếu có
       deviceStorage.write('authToken', response['token']);
     } 
+    // Trả về response
+    return response;
+  }
+    Future<Map<String, dynamic>?> logoutUser() async {
+    final response = await _authService.logout();
+
+    if (response == null) return null;
     // Trả về response
     return response;
   }

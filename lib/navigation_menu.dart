@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:sigmatech/features/personalization/screens/settings/settings.dart';
-import 'package:sigmatech/features/shop/screens/UserProfile/UserProfile.dart';
+import 'package:sigmatech/features/shop/screens/userprofile/userprofile.dart';
 import 'package:sigmatech/features/shop/screens/home/home.dart';
 import 'package:sigmatech/features/shop/screens/store/store.dart';
 import 'package:sigmatech/features/shop/screens/wishlist/wishlist.dart';
@@ -43,5 +42,5 @@ class NavigationMenu  extends StatelessWidget {
 class NavigationController extends GetxController{
   final Rx<int> selectedIndex = 0.obs;
 
-  final screens = [ const HomeScreen() ,  const StoreScreen(), const WishlistScreen(), ProfileScreen()];
+  final screens = [ const HomeScreen() ,  const StoreScreen(), const WishlistScreen(), const ProfileScreen()];
 }

@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
-// import 'package:sigmatech/utils/constants/colors.dart';
-// import 'package:sigmatech/utils/theme/theme.dart';
+import 'package:get_storage/get_storage.dart';
 
 import 'app.dart';
 
 Future<void> main() async {
-  //Add wigdet Binding
-  final WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  //Init local storage
-  
-  //await native splash
+  // Khởi tạo widget binding
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Khởi tạo local storage
+  await GetStorage.init();
+
+  // Khởi chạy ứng dụng
   runApp(const MyApp());
 }
