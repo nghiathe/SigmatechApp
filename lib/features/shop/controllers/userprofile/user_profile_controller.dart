@@ -27,6 +27,51 @@ class UserProfileController extends GetxController {
     fetchUserProfile();
   }
 
+  Future<void> updateUserAddress(String newAddress) async {
+    final String? token = deviceStorage.read('authToken');
+
+    if (token == null) {
+      TLoaders.errorSnackBar(
+        title: 'Lỗi xảy ra.',
+        message: 'Bạn cần đăng nhập để thực hiện chức năng này.',
+      );
+      return;
+    }
+
+    try {
+      final response = await http.put(
+        Uri.parse('$baseUrl/user/address'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({'address': newAddress}),
+      );
+
+      if (response.statusCode == 200) {
+        // Parse the response to get the updated user data
+        final data = jsonDecode(response.body);
+        _user.value = User.fromJson(data);
+
+        TLoaders.successSnackBar(
+          title: 'Cập nhật thành công',
+          message: 'Địa chỉ của bạn đã được cập nhật.',
+        );
+      } else {
+        TLoaders.errorSnackBar(
+          title: 'Lỗi xảy ra.',
+          message: 'Không thể cập nhật địa chỉ. Vui lòng thử lại sau.',
+        );
+      }
+    } catch (e) {
+      TLoaders.errorSnackBar(
+        title: 'Lỗi xảy ra.',
+        message: 'Không thể cập nhật địa chỉ. Vui lòng thử lại sau.',
+      );
+    }
+  }
+
   Future<void> fetchUserProfile() async {
 
     final String? token = deviceStorage.read('authToken');

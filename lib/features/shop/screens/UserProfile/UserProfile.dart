@@ -4,6 +4,7 @@ import 'package:iconsax/iconsax.dart';
 import 'package:sigmatech/features/shop/controllers/userprofile/user_profile_controller.dart';
 import 'package:sigmatech/features/shop/screens/userprofile/widgets/address.dart';
 import 'package:sigmatech/utils/constants/colors.dart';
+import 'package:sigmatech/utils/constants/image_strings.dart';
 import 'package:sigmatech/utils/constants/sizes.dart';
 import 'package:sigmatech/utils/helpers/helper_functions.dart';
 
@@ -43,8 +44,8 @@ class ProfileScreen extends StatelessWidget {
                   children: [
                     const CircleAvatar(
                       radius: 30,
-                      backgroundImage: NetworkImage(
-                          'https://random.imagecdn.app/150/150'), // Change to your avatar image
+                      backgroundImage: AssetImage(
+                          Timages.user), // Change to your avatar image
                     ),
                     const SizedBox(width: 16),
                     Column(
@@ -101,8 +102,14 @@ class ProfileScreen extends StatelessWidget {
           'Đơn hàng đang xử lý và đã hoàn tất', null),
       _buildListTile(Iconsax.lock, 'Quyền riêng tư',
           'Quản lý quyền riêng tư và kết nối tài khoản', null),
-      _buildListTile(Iconsax.logout, 'Đăng xuất',
-          'Đăng xuất tài khoản khỏi thiết bị này', () => controller.logoutUser()),
+      _buildListTile(
+        Iconsax.logout, 
+        'Đăng xuất', 
+        'Đăng xuất tài khoản khỏi thiết bị này', 
+        () {
+          _showLogoutConfirmationDialog(controller);
+        }
+      ),
     ];
   }
 
@@ -133,4 +140,22 @@ class ProfileScreen extends StatelessWidget {
       onTap: onTap,
     );
   }
+
+  void _showLogoutConfirmationDialog(UserProfileController controller) {
+  Get.defaultDialog(
+    title: 'Xác nhận đăng xuất',
+    middleText: 'Bạn có chắc chắn muốn đăng xuất khỏi tài khoản này không?',
+    textCancel: 'Hủy',
+    textConfirm: 'Đăng xuất',
+    confirmTextColor: Colors.white,
+    onConfirm: () {
+      controller.logoutUser();
+      Get.back(); // Đóng dialog sau khi đăng xuất
+    },
+    onCancel: () {
+      Get.back(); // Đóng dialog nếu hủy
+    },
+  );
+}
+
 }

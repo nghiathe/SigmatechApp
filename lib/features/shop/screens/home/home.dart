@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:sigmatech/common/widgets/appbar/appbar.dart';
 import 'package:sigmatech/common/widgets/products.cart/cart_menu_icon.dart';
+import 'package:sigmatech/features/shop/controllers/home/home_controller.dart';
+import 'package:sigmatech/utils/helpers/helper_functions.dart';
 
 import '../cart/cart.dart';
 
@@ -11,10 +14,11 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-
+    final dark = THelperFunctions.isDarkMode(context);
+    final controller = Get.put(HomeController());
     return Scaffold(
       appBar: TAppBar(
-        title: const Column(
+        title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
@@ -22,8 +26,8 @@ class HomeScreen extends StatelessWidget {
               style: TextStyle(fontSize: 14, color: Colors.grey),
             ),
             Text(
-              'SKIBIDI',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
+              controller.userName,
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: dark? Colors.grey : Colors.black),
             ),
           ],
         ),
@@ -48,7 +52,7 @@ class HomeScreen extends StatelessWidget {
                   color: Colors.grey[200],
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Row(
+                child: const Row(
                   children: [
                     Icon(Iconsax.search_normal, color: Colors.grey),
                     SizedBox(width: 8),
