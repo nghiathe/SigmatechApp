@@ -3,6 +3,9 @@ import 'package:intl/intl.dart';
 import 'package:get/get.dart';
 import 'package:sigmatech/features/shop/screens/store/widget/LaptopService.dart';
 
+import '../../controllers/cart/cart_controller.dart';
+import '../cart/cart.dart';
+
 class LaptopDetailScreen extends StatefulWidget {
   @override
   _LaptopDetailScreenState createState() => _LaptopDetailScreenState();
@@ -150,8 +153,24 @@ class _LaptopDetailScreenState extends State<LaptopDetailScreen> {
                     children: [
                       Expanded(
                         child: OutlinedButton.icon(
-                          onPressed: () {
-                            // Chức năng Mua ngay
+                          onPressed: () async {
+                            await CartController.addToCartLocal(
+                              laptop['id'],      // productId
+                              'laptops',         // productType
+                              1,                 // quantity
+                              laptop['name'],    // name
+                              int.tryParse(laptop['price'] ?? '0') ?? 0,             // price
+                              'https://6ma.zapto.org' + laptop['image1'],          // imageUrl
+                            );
+
+                            // Gọi updateCartCountFromLocalStorage để cập nhật số lượng
+                            Get.find<CartController>().updateCartCountFromLocalStorage();
+                            // Hiển thị thông báo snack bar
+                            Get.snackbar(
+                              'Giỏ hàng',
+                              '${laptop['name']} đã được thêm vào giỏ hàng!',
+                            );
+                            Get.to(() => CartScreen());
                           },
                           style: OutlinedButton.styleFrom(
                             side: const BorderSide(color: Color(0xFF408591)),
@@ -171,8 +190,23 @@ class _LaptopDetailScreenState extends State<LaptopDetailScreen> {
                       const SizedBox(width: 16),
                       Expanded(
                         child: ElevatedButton.icon(
-                          onPressed: () {
-                            // Chức năng Thêm vào giỏ
+                          onPressed: () async {
+                            await CartController.addToCartLocal(
+                              laptop['id'],      // productId
+                              'laptops',         // productType
+                              1,                 // quantity
+                              laptop['name'],    // name
+                              int.tryParse(laptop['price'] ?? '0') ?? 0,             // price
+                              'https://6ma.zapto.org' + laptop['image1'],          // imageUrl
+                            );
+
+                            // Gọi updateCartCountFromLocalStorage để cập nhật số lượng
+                            Get.find<CartController>().updateCartCountFromLocalStorage();
+                            // Hiển thị thông báo snack bar
+                            Get.snackbar(
+                              'Giỏ hàng',
+                              '${laptop['name']} đã được thêm vào giỏ hàng!',
+                            );
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFF408591),

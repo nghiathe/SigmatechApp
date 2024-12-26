@@ -213,6 +213,8 @@ class StoreScreen extends StatelessWidget {
                                   imageUrl,          // imageUrl
                                 );
 
+                                // Gọi updateCartCountFromLocalStorage để cập nhật số lượng
+                                Get.find<CartController>().updateCartCountFromLocalStorage();
                                 // Hiển thị thông báo snack bar
                                 Get.snackbar(
                                   'Giỏ hàng',

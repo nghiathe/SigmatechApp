@@ -164,7 +164,6 @@ class BrandLaptopScreen extends StatelessWidget {
                         );
 
                         // Cập nhật lại số lượng giỏ hàng sau khi thêm
-                        CartController().updateCartCount(token);
                       },
 
                       child: const Icon(

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -18,15 +20,12 @@ class TCartCounterIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Lấy instance của CartController
     final CartController cartController = Get.put(CartController());
-    final deviceStorage = GetStorage();
-    String token = deviceStorage.read('authToken');
-
-    // Cập nhật số lượng sản phẩm giỏ hàng mỗi khi màn hình được xây dựng
-    cartController.updateCartCount(token);
 
     return Obx(() {
-      int cartCount = cartController.cartCount.value;  // Lấy số lượng từ Rx<int>
+      // Sử dụng biến cartCount từ CartController
+      int cartCount = cartController.cartCount.value;
 
       return Stack(
         children: [
@@ -34,7 +33,7 @@ class TCartCounterIcon extends StatelessWidget {
             onPressed: onPressed,
             icon: const Icon(Icons.shopping_bag_outlined, color: TColors.primary),
           ),
-            // Hiển thị số lượng chỉ khi có sản phẩm trong giỏ hàng
+
             Positioned(
               right: 0,
               child: Container(

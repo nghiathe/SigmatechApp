@@ -8,7 +8,7 @@ import 'package:intl/intl.dart';
 import '../../controllers/cart/cart_controller.dart';
 import '../../models/cart_item.dart';
 import '../order/order.dart';
-
+import 'package:get/get.dart';
 
 class CartScreen extends StatefulWidget {
   @override
@@ -106,7 +106,19 @@ class _CartScreenState extends State<CartScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Giỏ Hàng')),
+      appBar: AppBar(
+        title: Text('Giỏ hàng'),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            // Cập nhật số lượng sản phẩm trong giỏ hàng
+            Get.find<CartController>().updateCartCountFromLocalStorage();
+
+            // Quay lại màn hình trước
+            Navigator.pop(context);
+          },
+        ),
+      ),
       body: FutureBuilder<List<CartItem>>(
         future: _cartItems, // Đảm bảo bạn đang sử dụng _cartItems để tải và hiển thị
         builder: (context, snapshot) {

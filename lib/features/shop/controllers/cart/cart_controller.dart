@@ -70,35 +70,21 @@ class CartController {
       print('Lỗi khi lưu giỏ hàng vào storage: $e');
     }
   }
+  RxInt cartCount = 0.obs;
 
-  var cartCount = 0.obs;  // Rx để theo dõi số lượng giỏ hàng
-
-  // Hàm gọi API lấy số lượng sản phẩm trong giỏ hàng
-  Future<void> updateCartCount(String token) async {
+  // Cập nhật số lượng sản phẩm từ localStorage
+  void updateCartCountFromLocalStorage() {
     try {
-      final int count = await getCartCount(token);  // Gọi API lấy số lượng sản phẩm
-      cartCount.value = count;  // Cập nhật giá trị của cartCount
+      final String? cartData = deviceStorage.read('cart');
+      if (cartData != null) {
+        final List<dynamic> cartItems = json.decode(cartData);
+        cartCount.value = cartItems.length;
+      } else {
+        cartCount.value = 0;
+      }
     } catch (e) {
-      cartCount.value = 0;  // Nếu có lỗi thì gán số lượng là 0
-    }
-  }
-
-  // Hàm gọi API lấy số lượng sản phẩm trong giỏ hàng
-  static Future<int> getCartCount(String token) async {
-    final response = await http.get(
-      Uri.parse('$baseUrl/cart/count'),
-      headers: {
-        'Authorization': 'Bearer $token',
-        'Content-Type': 'application/json',
-      },
-    );
-
-    if (response.statusCode == 200) {
-      // Giả sử API trả về dữ liệu dạng: { "cartItemCount": 4 }
-      var data = json.decode(response.body);
-      return data['cartItemCount'] ?? 0;  // Trả về số lượng sản phẩm
-    } else {
-      throw Exception('Không thể lấy số lượng sản phẩm');
+      print('Lỗi khi cập nhật số lượng từ localStorage: $e');
+      cartCount.value = 0;
     }
   }
 
