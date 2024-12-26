@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:sigmatech/features/shop/screens/store/LaptopDetailScreen-Implementation.dart';
+import 'package:intl/intl.dart';
+import 'package:sigmatech/features/shop/screens/store/detail_laptop_screen.dart';
 import 'package:sigmatech/features/shop/screens/store/widget/LaptopService.dart';
 
 class FilterLaptopScreen extends StatelessWidget {
@@ -18,14 +19,15 @@ class FilterLaptopScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Search Results for "$keyword"'),
+        title: Text('Kết quả tìm kiếm cho "$keyword"'),
       ),
       body: filteredLaptops.isEmpty
-          ? const Center(child: Text('No laptops found matching your search.'))
+          ? const Center(child: Text('Không có sản phẩm cần tìm.'))
           : ListView.builder(
         itemCount: filteredLaptops.length,
         itemBuilder: (context, index) {
           final laptop = filteredLaptops[index];
+          final price = int.tryParse(laptop['price'] ?? '0') ?? 0;
           return ListTile(
             leading: laptop['image1'] != null
                 ? Image.network(
@@ -40,8 +42,12 @@ class FilterLaptopScreen extends StatelessWidget {
                 : const Icon(Icons.computer, size: 50),
             title: Text(laptop['name'] ?? 'Unknown'),
             subtitle: Text(
-              '${laptop['price'] ?? '0'} VNĐ',
-              style: const TextStyle(color: Colors.red),
+              '${NumberFormat.currency(locale: 'vi', symbol: '', decimalDigits: 0).format(price)} VNĐ',
+              style: const TextStyle(
+                fontSize: 15.0,
+                fontWeight: FontWeight.bold,
+                color: Colors.red,
+              ),
             ),
             onTap: () {
               Get.to(() => LaptopDetailScreen(), arguments: laptop['id']);

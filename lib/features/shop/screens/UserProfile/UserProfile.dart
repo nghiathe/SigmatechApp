@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:sigmatech/common/widgets/appbar/appbar.dart';
 import 'package:sigmatech/features/shop/controllers/userprofile/user_profile_controller.dart';
 import 'package:sigmatech/features/shop/screens/UserProfile/OrderList.dart';
 import 'package:sigmatech/features/shop/screens/userprofile/widgets/address.dart';
 import 'package:sigmatech/utils/constants/colors.dart';
+import 'package:sigmatech/utils/constants/image_strings.dart';
 import 'package:sigmatech/utils/constants/sizes.dart';
 import 'package:sigmatech/utils/helpers/helper_functions.dart';
 
@@ -19,11 +21,16 @@ class ProfileScreen extends StatelessWidget {
     final controller = Get.put(UserProfileController());
 
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        title: const Text('Tài khoản', style: TextStyle(fontSize: 20)),
-        backgroundColor: dark ? TColors.black : Colors.white,
-        foregroundColor: dark ? Colors.white : Colors.black,
+      appBar: const TAppBar(
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Tài khoản',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
+            ),
+          ],
+        ),
       ),
       body: Obx(() {
         final user = controller.user;
@@ -47,8 +54,8 @@ class ProfileScreen extends StatelessWidget {
                   children: [
                     const CircleAvatar(
                       radius: 30,
-                      backgroundImage: NetworkImage(
-                          'https://random.imagecdn.app/150/150'), // Change to your avatar image
+                      backgroundImage: AssetImage(
+                          Timages.user), // Change to your avatar image
                     ),
                     const SizedBox(width: 16),
                     Column(
@@ -99,7 +106,7 @@ class ProfileScreen extends StatelessWidget {
       _buildListTile(
         Iconsax.home, 'Địa chỉ của tôi', 'Thiết lập địa chỉ giao hàng', 
         () {
-          Get.to(() => const AddressScreen());
+          Get.to(() => AddressScreen());
         }),
       _buildListTile(Iconsax.shopping_cart, 'Giỏ hàng',
           'Thêm, xóa sản phẩm và thanh toán', null),
@@ -109,8 +116,14 @@ class ProfileScreen extends StatelessWidget {
           }),
       _buildListTile(Iconsax.lock, 'Quyền riêng tư',
           'Quản lý quyền riêng tư và kết nối tài khoản', null),
-      _buildListTile(Iconsax.logout, 'Đăng xuất',
-          'Đăng xuất tài khoản khỏi thiết bị này', () => controller.logoutUser()),
+      _buildListTile(
+        Iconsax.logout, 
+        'Đăng xuất', 
+        'Đăng xuất tài khoản khỏi thiết bị này', 
+        () {
+          _showLogoutConfirmationDialog(controller);
+        }
+      ),
     ];
   }
 
@@ -133,7 +146,7 @@ class ProfileScreen extends StatelessWidget {
 
   Widget _buildListTile(IconData icon, String title, String subtitle, VoidCallback? onTap) {
     return ListTile(
-      leading: Icon(icon, size: 28, color: Colors.blueAccent),
+      leading: Icon(icon, size: 28, color: const Color(0xFF408591)),
       title: Text(title,
           style: const TextStyle(fontSize: TSizes.fontSizeMd, fontWeight: FontWeight.w500)),
       subtitle: Text(subtitle,
@@ -141,4 +154,22 @@ class ProfileScreen extends StatelessWidget {
       onTap: onTap,
     );
   }
+
+  void _showLogoutConfirmationDialog(UserProfileController controller) {
+  Get.defaultDialog(
+    title: 'Xác nhận đăng xuất',
+    middleText: 'Bạn có chắc chắn muốn đăng xuất khỏi tài khoản này không?',
+    textCancel: 'Hủy',
+    textConfirm: 'Đăng xuất',
+    confirmTextColor: Colors.white,
+    onConfirm: () {
+      controller.logoutUser();
+      Get.back(); // Đóng dialog sau khi đăng xuất
+    },
+    onCancel: () {
+      Get.back(); // Đóng dialog nếu hủy
+    },
+  );
+}
+
 }

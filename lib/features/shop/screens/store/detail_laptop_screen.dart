@@ -10,7 +10,6 @@ class LaptopDetailScreen extends StatefulWidget {
 
 class _LaptopDetailScreenState extends State<LaptopDetailScreen> {
   final LaptopService laptopService = LaptopService.instance;
-  late int itemCount = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -146,46 +145,47 @@ class _LaptopDetailScreenState extends State<LaptopDetailScreen> {
                   ),
                   const SizedBox(height: 24),
 
-                  // Bộ đếm và nút thêm vào giỏ hàng
+                  // Nút "Mua ngay" và "Thêm vào giỏ hàng"
                   Row(
                     children: [
-                      // Bộ đếm số lượng
-                      Row(
-                        children: [
-                          IconButton(
-                            onPressed: () {
-                              if (itemCount > 1) {
-                                setState(() => itemCount--);
-                              }
-                            },
-                            icon: const Icon(Icons.remove, color: Colors.blueAccent),
+                      Expanded(
+                        child: OutlinedButton.icon(
+                          onPressed: () {
+                            // Chức năng Mua ngay
+                          },
+                          style: OutlinedButton.styleFrom(
+                            side: const BorderSide(color: Color(0xFF408591)),
+                            padding: const EdgeInsets.symmetric(vertical: 12),
                           ),
-                          Text(
-                            '$itemCount',
-                            style: const TextStyle(fontSize: 18),
+                          icon: const Icon(Icons.flash_on, color: Color(0xFF408591)),
+                          label: const Text(
+                            'Mua ngay',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF408591),
+                            ),
                           ),
-                          IconButton(
-                            onPressed: () {
-                              setState(() => itemCount++);
-                            },
-                            icon: const Icon(Icons.add, color: Colors.blueAccent),
-                          ),
-                        ],
+                        ),
                       ),
                       const SizedBox(width: 16),
                       Expanded(
                         child: ElevatedButton.icon(
-                          onPressed: () {},
-                          icon: const Icon(Icons.shopping_bag),
-                          label: const Text(
-                            'Add to Bag',
-                            style:
-                            TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                          ),
+                          onPressed: () {
+                            // Chức năng Thêm vào giỏ
+                          },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blueAccent,
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 24, vertical: 12),
+                            backgroundColor: const Color(0xFF408591),
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                          ),
+                          icon: const Icon(Icons.shopping_cart, color: Colors.white),
+                          label: const Text(
+                            'Thêm vào giỏ',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                       ),

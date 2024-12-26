@@ -32,7 +32,7 @@ class TCartCounterIcon extends StatelessWidget {
         children: [
           IconButton(
             onPressed: onPressed,
-            icon: const Icon(Icons.shopping_bag, color: TColors.black),
+            icon: const Icon(Icons.shopping_bag_outlined, color: TColors.primary),
           ),
             // Hiển thị số lượng chỉ khi có sản phẩm trong giỏ hàng
             Positioned(
@@ -41,7 +41,7 @@ class TCartCounterIcon extends StatelessWidget {
                 width: 18,
                 height: 18,
                 decoration: BoxDecoration(
-                  color: TColors.black,
+                  color: TColors.darkGrey,
                   borderRadius: BorderRadius.circular(100),
                 ),
                 child: Center(

@@ -2,7 +2,7 @@ class User {
   final int id;
   final String name;
   final String email;
-  final String? address;
+  String? address;
   final String? phone;
   final String? gender;
   final String utype;
@@ -26,6 +26,26 @@ class User {
       phone: json['phone'],
       gender: json['gender'],
       utype: json['utype'],
+    );
+  }
+
+  User copyWith({
+    int? id,
+    String? name,
+    String? email,
+    String? address,
+    String? phone,
+    String? gender,
+    String? utype,
+  }) {
+    return User(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      email: email ?? this.email,
+      address: address ?? this.address,
+      phone: phone ?? this.phone,
+      gender: gender ?? this.gender,
+      utype: utype ?? this.utype,
     );
   }
 }

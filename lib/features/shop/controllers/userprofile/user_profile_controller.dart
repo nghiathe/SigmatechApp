@@ -8,9 +8,7 @@ import 'dart:convert';
 
 import 'package:sigmatech/utils/popups/loaders.dart';
 
-
 class UserProfileController extends GetxController {
-
   static UserProfileController get instance => Get.find();
   final Rx<User?> _user = Rx<User?>(null);
   final String baseUrl = 'https://6ma.zapto.org/api';
@@ -21,14 +19,56 @@ class UserProfileController extends GetxController {
   String get userAddress {
     return _user.value?.address ?? 'Chưa cập nhật địa chỉ';
   }
+
   @override
   void onInit() {
     super.onInit();
     fetchUserProfile();
   }
 
-  Future<void> fetchUserProfile() async {
+  Future<void> updateUserAddress(String newAddress) async {
+    final String? token = deviceStorage.read('authToken');
 
+    if (token == null) {
+      return;
+    }
+
+    try {
+      final response = await http.put(
+        Uri.parse('$baseUrl/user/address'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({'address': newAddress}),
+      );
+
+      if (response.statusCode == 200) {
+        // Parse the response to get the updated user data
+        final data = jsonDecode(response.body);
+        
+        _user.value!.address = data['address'];
+
+        TLoaders.successSnackBar(
+          title: 'Cập nhật thành công',
+          message: 'Địa chỉ của bạn đã được cập nhật.',
+        );
+      } else {
+        TLoaders.errorSnackBar(
+          title: 'Lỗi xảy ra.',
+          message: 'Không thể cập nhật địa chỉ. Vui lòng thử lại sau.',
+        );
+      }
+    } catch (e) {
+      TLoaders.errorSnackBar(
+        title: 'Lỗi xảy ra.',
+        message: 'Không thể cập nhật địa chỉ. Vui lòng thử lại sau.',
+      );
+    }
+  }
+
+  Future<void> fetchUserProfile() async {
     final String? token = deviceStorage.read('authToken');
 
     if (token == null) {
@@ -49,11 +89,12 @@ class UserProfileController extends GetxController {
         _user.value = User.fromJson(data);
       } else {
         TLoaders.errorSnackBar(
-          title: 'Lỗi xảy ra.', message: 'Không lấy được dữ liệu người dùng.');
+            title: 'Lỗi xảy ra.',
+            message: 'Không lấy được dữ liệu người dùng.');
       }
     } catch (e) {
       TLoaders.errorSnackBar(
-        title: 'Lỗi xảy ra.', message: 'Không lấy được dữ liệu người dùng.');
+          title: 'Lỗi xảy ra.', message: 'Không lấy được dữ liệu người dùng.');
     }
   }
 
@@ -75,6 +116,7 @@ class UserProfileController extends GetxController {
       );
     }
   }
+
   void isDarkMode(bool value) {
     deviceStorage.write('isDarkMode', value);
   }

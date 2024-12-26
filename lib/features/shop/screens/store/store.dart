@@ -6,8 +6,9 @@ import 'package:intl/intl.dart'; // Để format giá tiền
 import 'package:sigmatech/common/widgets/appbar/appbar.dart';
 import 'package:sigmatech/common/widgets/products.cart/cart_menu_icon.dart';
 import 'package:sigmatech/features/shop/screens/cart/cart.dart';
+import 'package:sigmatech/features/shop/screens/chat/chat_screen.dart';
 import 'package:sigmatech/features/shop/screens/home/widgets/filter_brand_laptop_screen.dart';
-import 'package:sigmatech/features/shop/screens/store/LaptopDetailScreen-Implementation.dart';
+import 'package:sigmatech/features/shop/screens/store/detail_laptop_screen.dart';
 import 'package:sigmatech/features/shop/screens/store/widget/LaptopService.dart';
 import 'package:sigmatech/features/shop/screens/wishlist/widget/WishlistService.dart';
 
@@ -29,7 +30,7 @@ class StoreScreen extends StatelessWidget {
           children: [
             Text(
               'Danh mục sản phẩm',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: const Color(0xFF408591)),
             ),
           ],
         ),
@@ -40,6 +41,19 @@ class StoreScreen extends StatelessWidget {
               MaterialPageRoute(builder: (context) => CartScreen()),
             );
           }),
+          IconButton(
+            icon: const Icon(
+              Iconsax.message,
+              color: Color(0xFF408591), // Thêm màu teal cho biểu tượng
+            ),
+            onPressed: () {
+              // Mở cửa sổ chat
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ChatScreen()),
+              );
+            },
+          ),
         ],
       ),
       body: SingleChildScrollView(
@@ -67,7 +81,8 @@ class StoreScreen extends StatelessWidget {
               if (laptopService.laptops.isEmpty) {
                 return const Center(child: Text('Không có sản phẩm nào.'));
               }
-              return GridView.builder(
+              return
+                GridView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 padding: const EdgeInsets.all(8.0),
@@ -176,7 +191,8 @@ class StoreScreen extends StatelessWidget {
                             right: 1.0,
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                shape: RoundedRectangleBorder(
+                                backgroundColor: const Color(0xFF408591),
+                                shape: const RoundedRectangleBorder(
                                   borderRadius: BorderRadius.only(
                                     topLeft: Radius.circular(12), // Góc trên bên trái
                                     bottomRight: Radius.circular(12), // Góc dưới bên phải

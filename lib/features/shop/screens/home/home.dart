@@ -2,6 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import '../../../../utils/constants/colors.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -11,13 +12,14 @@ import 'package:sigmatech/features/shop/controllers/cart/cart_controller.dart';
 import 'package:sigmatech/features/shop/screens/cart/cart.dart';
 import 'package:sigmatech/features/shop/screens/home/widgets/filter_brand_laptop_screen.dart';
 import 'package:sigmatech/features/shop/screens/home/widgets/filter_laptop_screen.dart';
-import 'package:sigmatech/features/shop/screens/store/LaptopDetailScreen-Implementation.dart';
+import 'package:sigmatech/features/shop/screens/store/detail_laptop_screen.dart';
 import 'package:sigmatech/features/shop/screens/store/widget/LaptopService.dart';
 import 'package:sigmatech/features/shop/screens/wishlist/widget/WishlistService.dart';
+import 'package:sigmatech/features/shop/screens/chat/chat_screen.dart'; // Import file chatbot
 
 class HomeScreen extends StatelessWidget {
   final LaptopService laptopService = LaptopService.instance;
-  final TextEditingController searchController = TextEditingController(); // Thêm controller
+  final TextEditingController searchController = TextEditingController();
   final WishlistService wishlistService = Get.put(WishlistService());
   final List<String> sliderImages = [
     'https://6ma.zapto.org/assets/img/banner/Slider/Slide1.jpg',
@@ -44,7 +46,7 @@ class HomeScreen extends StatelessWidget {
 
             Text(
               'SIGMATECH',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: const Color(0xFF408591)),
             ),
             Text(
               'Xin chào!',
@@ -59,6 +61,19 @@ class HomeScreen extends StatelessWidget {
               MaterialPageRoute(builder: (context) => CartScreen()),
             );
           }),
+          IconButton(
+            icon: const Icon(
+              Iconsax.message,
+              color: Color(0xFF408591), // Thêm màu teal cho biểu tượng
+            ),
+            onPressed: () {
+              // Mở cửa sổ chat
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ChatScreen()),
+              );
+            },
+          ),
         ],
       ),
       body: Obx(() {
@@ -249,7 +264,8 @@ class HomeScreen extends StatelessWidget {
                             right: 1.0,
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                shape: RoundedRectangleBorder(
+                                backgroundColor: const Color(0xFF408591),
+                                shape: const RoundedRectangleBorder(
                                   borderRadius: BorderRadius.only(
                                     topLeft: Radius.circular(12), // Góc trên bên trái
                                     bottomRight: Radius.circular(12), // Góc dưới bên phải

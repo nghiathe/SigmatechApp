@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:intl/intl.dart';
 import 'package:sigmatech/features/shop/controllers/cart/cart_controller.dart';
-import 'package:sigmatech/features/shop/screens/store/LaptopDetailScreen-Implementation.dart';
+import 'package:sigmatech/features/shop/screens/store/detail_laptop_screen.dart';
 import 'package:sigmatech/features/shop/screens/store/widget/LaptopService.dart';
 import 'package:sigmatech/features/shop/screens/wishlist/widget/WishlistService.dart';
-
+import 'package:sigmatech/utils/constants/colors.dart';
 class BrandLaptopScreen extends StatelessWidget {
   final String brand;
   final LaptopService laptopService = LaptopService.instance;
@@ -21,11 +22,13 @@ class BrandLaptopScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Laptops from $brand'),
+        title: Text('Laptops $brand'),
       ),
       body: filteredLaptops.isEmpty
-          ? const Center(child: Text('No laptops found for this brand.'))
+          ? const Center(child: Text('Không có sản phẩm cần tìm.'))
           : GridView.builder(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
         padding: const EdgeInsets.all(8.0),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2, // Số cột
@@ -39,7 +42,7 @@ class BrandLaptopScreen extends StatelessWidget {
           final name = laptop['name'] ?? 'Không rõ tên';
           final brand = laptop['brand'] ?? 'Không rõ thương hiệu';
           final price = int.tryParse(laptop['price'] ?? '0') ?? 0;
-          final imageUrl = 'https://6ma.zapto.org' + (laptop['image1'] ?? '/placeholder.png');
+          final imageUrl = 'https://6ma.zapto.org' + laptop['image1'] ?? 'https://via.placeholder.com/150';
           return GestureDetector(
             onTap: () {
               Get.to(() => LaptopDetailScreen(), arguments: laptop['id']);
@@ -132,8 +135,17 @@ class BrandLaptopScreen extends StatelessWidget {
                     right: 1.0,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        shape: const CircleBorder(),
-                        padding: const EdgeInsets.all(10),
+                        backgroundColor: const Color(0xFF408591),
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(12), // Góc trên bên trái
+                            bottomRight: Radius.circular(12), // Góc dưới bên phải
+                            topRight: Radius.zero, // Các góc khác vuông
+                            bottomLeft: Radius.zero,
+                          ),
+                        ),
+                        padding: EdgeInsets.zero, // Loại bỏ padding mặc định
+                        minimumSize: const Size(40, 40), // Kích thước nhỏ hơn
                       ),
                       onPressed: () async {
                         await CartController.addToCartLocal(
@@ -150,15 +162,19 @@ class BrandLaptopScreen extends StatelessWidget {
                           'Giỏ hàng',
                           '${laptop['name']} đã được thêm vào giỏ hàng!',
                         );
+
+                        // Cập nhật lại số lượng giỏ hàng sau khi thêm
+                        CartController().updateCartCount(token);
                       },
 
                       child: const Icon(
-                        Icons.add,
-                        size: 20,
-                        color: Colors.white,
+                        Iconsax.add,
+                        color: TColors.white,
+                        size: 20, // Kích thước icon nhỏ hơn
                       ),
                     ),
                   ),
+
                 ],
               ),
             ),
