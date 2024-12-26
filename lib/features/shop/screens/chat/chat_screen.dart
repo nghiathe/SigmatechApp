@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sigmatech/features/shop/screens/chat/widget/chat_service.dart';
-import 'package:sigmatech/features/shop/screens/store/LaptopDetailScreen-Implementation.dart';
+import 'package:sigmatech/features/shop/screens/store/detail_laptop_screen.dart';
 
 
 class ChatScreen extends StatelessWidget {

@@ -12,7 +12,7 @@ import 'package:sigmatech/features/shop/controllers/cart/cart_controller.dart';
 import 'package:sigmatech/features/shop/screens/cart/cart.dart';
 import 'package:sigmatech/features/shop/screens/home/widgets/filter_brand_laptop_screen.dart';
 import 'package:sigmatech/features/shop/screens/home/widgets/filter_laptop_screen.dart';
-import 'package:sigmatech/features/shop/screens/store/LaptopDetailScreen-Implementation.dart';
+import 'package:sigmatech/features/shop/screens/store/detail_laptop_screen.dart';
 import 'package:sigmatech/features/shop/screens/store/widget/LaptopService.dart';
 import 'package:sigmatech/features/shop/screens/wishlist/widget/WishlistService.dart';
 import 'package:sigmatech/features/shop/screens/chat/chat_screen.dart'; // Import file chatbot
@@ -40,13 +40,13 @@ class HomeScreen extends StatelessWidget {
     final deviceStorage = GetStorage();
     return Scaffold(
       appBar: TAppBar(
-        title: Column(
+        title: const Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
 
             Text(
               'SIGMATECH',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: const Color(0xFF408591)),
             ),
             Text(
               'Xin chào!',
@@ -62,7 +62,10 @@ class HomeScreen extends StatelessWidget {
             );
           }),
           IconButton(
-            icon: const Icon(Iconsax.message),
+            icon: const Icon(
+              Iconsax.message,
+              color: Color(0xFF408591), // Thêm màu teal cho biểu tượng
+            ),
             onPressed: () {
               // Mở cửa sổ chat
               Navigator.push(
@@ -261,7 +264,8 @@ class HomeScreen extends StatelessWidget {
                             right: 1.0,
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                shape: RoundedRectangleBorder(
+                                backgroundColor: const Color(0xFF408591),
+                                shape: const RoundedRectangleBorder(
                                   borderRadius: BorderRadius.only(
                                     topLeft: Radius.circular(12), // Góc trên bên trái
                                     bottomRight: Radius.circular(12), // Góc dưới bên phải

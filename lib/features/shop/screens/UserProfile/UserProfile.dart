@@ -146,7 +146,7 @@ class ProfileScreen extends StatelessWidget {
 
   Widget _buildListTile(IconData icon, String title, String subtitle, VoidCallback? onTap) {
     return ListTile(
-      leading: Icon(icon, size: 28, color: Colors.blueAccent),
+      leading: Icon(icon, size: 28, color: const Color(0xFF408591)),
       title: Text(title,
           style: const TextStyle(fontSize: TSizes.fontSizeMd, fontWeight: FontWeight.w500)),
       subtitle: Text(subtitle,

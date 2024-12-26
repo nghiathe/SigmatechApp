@@ -8,7 +8,7 @@ import 'package:sigmatech/features/shop/screens/cart/cart.dart';
 import 'package:sigmatech/features/shop/screens/chat/chat_screen.dart';
 import 'package:sigmatech/features/shop/screens/wishlist/widget/WishlistService.dart';
 import 'package:sigmatech/features/shop/screens/store/widget/LaptopService.dart';
-import 'package:sigmatech/features/shop/screens/store/LaptopDetailScreen-Implementation.dart';
+import 'package:sigmatech/features/shop/screens/store/detail_laptop_screen.dart';
 
 class WishlistScreen extends StatelessWidget {
   final WishlistService wishlistService = Get.find<WishlistService>();
@@ -23,7 +23,7 @@ class WishlistScreen extends StatelessWidget {
           children: [
             Text(
               'Sản phẩm yêu thích',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: const Color(0xFF408591)),
             ),
           ],
         ),
@@ -35,7 +35,10 @@ class WishlistScreen extends StatelessWidget {
             );
           }),
           IconButton(
-            icon: const Icon(Iconsax.message),
+            icon: const Icon(
+              Iconsax.message,
+              color: Color(0xFF408591), // Thêm màu teal cho biểu tượng
+            ),
             onPressed: () {
               // Mở cửa sổ chat
               Navigator.push(
