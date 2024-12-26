@@ -14,6 +14,7 @@ import 'package:sigmatech/features/shop/screens/home/widgets/filter_laptop_scree
 import 'package:sigmatech/features/shop/screens/store/LaptopDetailScreen-Implementation.dart';
 import 'package:sigmatech/features/shop/screens/store/widget/LaptopService.dart';
 import 'package:sigmatech/features/shop/screens/wishlist/widget/WishlistService.dart';
+import 'package:sigmatech/features/shop/screens/chat/chat_screen.dart'; // Import file chatbot
 
 class HomeScreen extends StatelessWidget {
   final LaptopService laptopService = LaptopService.instance;
@@ -59,6 +60,16 @@ class HomeScreen extends StatelessWidget {
               MaterialPageRoute(builder: (context) => CartScreen()),
             );
           }),
+          IconButton(
+            icon: const Icon(Iconsax.message),
+            onPressed: () {
+              // Mở cửa sổ chat
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ChatScreen()),
+              );
+            },
+          ),
         ],
       ),
       body: Obx(() {

@@ -6,6 +6,7 @@ import 'package:intl/intl.dart'; // Để format giá tiền
 import 'package:sigmatech/common/widgets/appbar/appbar.dart';
 import 'package:sigmatech/common/widgets/products.cart/cart_menu_icon.dart';
 import 'package:sigmatech/features/shop/screens/cart/cart.dart';
+import 'package:sigmatech/features/shop/screens/chat/chat_screen.dart';
 import 'package:sigmatech/features/shop/screens/home/widgets/filter_brand_laptop_screen.dart';
 import 'package:sigmatech/features/shop/screens/store/LaptopDetailScreen-Implementation.dart';
 import 'package:sigmatech/features/shop/screens/store/widget/LaptopService.dart';
@@ -40,6 +41,16 @@ class StoreScreen extends StatelessWidget {
               MaterialPageRoute(builder: (context) => CartScreen()),
             );
           }),
+          IconButton(
+            icon: const Icon(Iconsax.message),
+            onPressed: () {
+              // Mở cửa sổ chat
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => ChatScreen()),
+              );
+            },
+          ),
         ],
       ),
       body: SingleChildScrollView(
