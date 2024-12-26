@@ -4,7 +4,7 @@ import 'package:sigmatech/features/authentication/screens/login/login.dart';
 import 'package:sigmatech/features/authentication/screens/onboarding/onboarding.dart';
 import 'package:sigmatech/data/services/auth_service.dart';
 import 'package:sigmatech/navigation_menu.dart';
-import 'package:sigmatech/utils/popups/loaders.dart';
+
 
 class AuthenticationRepository extends GetxController {
   static AuthenticationRepository get instance => Get.find();
@@ -18,7 +18,6 @@ class AuthenticationRepository extends GetxController {
     screenRedirect();
   }
 
-  /// Điều hướng người dùng khi khởi động ứng dụng
   screenRedirect() async {
     final user = await _authService.currentUser;
     if (user != null) {
@@ -33,13 +32,11 @@ class AuthenticationRepository extends GetxController {
     }
   }
 
-  /// Xử lý logic đăng ký người dùng
   Future<Map<String, dynamic>?> registerUser(String name, String email, String phone, String password, String passwordConfirm) async {
     final response = await _authService.register(
         name, email, phone, password, passwordConfirm);
 
     if (response == null) return null;
-    // Lưu token vào local storage
     if (response.containsKey('token')) {
       deviceStorage.write('authToken', response['token']);
     }
@@ -52,7 +49,6 @@ class AuthenticationRepository extends GetxController {
     if (response == null) return null;
 
     if (response.containsKey('token')) {
-      // Lưu token vào local storage nếu có
       deviceStorage.write('authToken', response['token']);
     } 
     // Trả về response
