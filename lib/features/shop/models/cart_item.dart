@@ -1,47 +1,39 @@
 class CartItem {
-  final int id;
-  final int userId;
-  final String productType;
   final int productId;
-  final String name;
+  final String productType;
   int quantity;
-  final String createdAt;
-  final String updatedAt;
-  final String? deletedAt;
-  final String dealPrice;
-  final String price;
-  final String image;
+  final String name;
+  final int price; // Đảm bảo kiểu là int
+  final String imageUrl;
 
   CartItem({
-    required this.id,
-    required this.userId,
-    required this.productType,
     required this.productId,
-    required this.name,
+    required this.productType,
     required this.quantity,
-    required this.createdAt,
-    required this.updatedAt,
-    this.deletedAt,
-    required this.dealPrice,
+    required this.name,
     required this.price,
-    required this.image,
+    required this.imageUrl,
   });
 
-  // Hàm khởi tạo từ JSON
   factory CartItem.fromJson(Map<String, dynamic> json) {
     return CartItem(
-      id: json['id'],
-      userId: json['user_id'],
-      productType: json['product_type'],
-      productId: json['product_id'],
-      name: json['name'],
-      quantity: json['quantity'],
-      createdAt: json['created_at'],
-      updatedAt: json['updated_at'],
-      deletedAt: json['deleted_at'],
-      dealPrice: json['dealprice'],
-      price: json['price'],
-      image: json['image'],
+      productId: json['product_id'] as int,
+      productType: json['product_type'] as String,
+      quantity: json['quantity'] as int,
+      name: json['name'] as String,
+      price: json['price'] as int,  // Chắc chắn giá trị là kiểu int
+      imageUrl: json['image_url'] as String,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'product_id': productId,
+      'product_type': productType,
+      'quantity': quantity,
+      'name': name,
+      'price': price,
+      'image_url': imageUrl,
+    };
   }
 }

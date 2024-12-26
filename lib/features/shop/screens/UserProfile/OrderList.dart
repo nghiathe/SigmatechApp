@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../../navigation_menu.dart';
 import '../../controllers/order/order_controller.dart';
+
 
 class OrderListScreen extends StatelessWidget {
   final OrderController controller = Get.put(OrderController());
@@ -16,6 +18,12 @@ class OrderListScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text('Danh sách đơn hàng'),
         backgroundColor: Colors.blueAccent, // Thêm màu nền cho appBar
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Get.offAll(() => NavigationMenu());
+          },
+        ),
       ),
       body: Obx(() {
         if (controller.isLoading.value) {
@@ -61,6 +69,8 @@ class OrderListScreen extends StatelessWidget {
       }),
     );
   }
+
+
 
   // Hàm lấy màu cho trạng thái đơn hàng
   Color _getStatusColor(String status) {

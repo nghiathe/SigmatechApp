@@ -28,34 +28,5 @@ class OrderController {
       isLoading(false);
     }
   }
-  static Future<void> fetchProductDetails(String token,List<Map<String, dynamic>> selectedProducts) async {
 
-    // Xây dựng các tham số query từ selectedProducts
-    String queryParams = selectedProducts
-        .map((item) => 'productType=${item['productType']}&productId=${item['productId']}')
-        .join('&');
-
-    // Thêm totalAmount vào query params
-    String url = 'https://6ma.zapto.org/api/cart/order?$queryParams';
-
-    try {
-      final response = await http.get(
-        Uri.parse(url),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $token',
-        },
-      );
-
-      if (response.statusCode == 200) {
-        var data = json.decode(response.body);
-        print('Dữ liệu trả về: $data');
-      } else {
-        print('Lỗi khi tải dữ liệu: ${response.statusCode}');
-        print('Nội dung lỗi: ${response.body}');
-      }
-    } catch (e) {
-      print('Lỗi kết nối: $e');
-    }
-  }
 }
