@@ -12,7 +12,7 @@ class BrandLaptopScreen extends StatelessWidget {
   final String brand;
   final LaptopService laptopService = LaptopService.instance;
   final WishlistService wishlistService = Get.put(WishlistService());
-  BrandLaptopScreen({required this.brand});
+  BrandLaptopScreen({super.key, required this.brand});
 
   @override
   Widget build(BuildContext context) {
