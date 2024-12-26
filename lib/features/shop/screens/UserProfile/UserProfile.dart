@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:sigmatech/features/shop/controllers/userprofile/user_profile_controller.dart';
+import 'package:sigmatech/features/shop/screens/UserProfile/OrderList.dart';
 import 'package:sigmatech/features/shop/screens/userprofile/widgets/address.dart';
 import 'package:sigmatech/utils/constants/colors.dart';
 import 'package:sigmatech/utils/constants/image_strings.dart';
@@ -13,8 +15,10 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     final dark = THelperFunctions.isDarkMode(context);
     final controller = Get.put(UserProfileController());
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -90,6 +94,8 @@ class ProfileScreen extends StatelessWidget {
   }
 
   List<Widget> _buildAccountSettings(UserProfileController controller) {
+    final deviceStorage = GetStorage();
+    String token = deviceStorage.read('authToken');
     return [
       _buildListTile(
         Iconsax.home, 'Địa chỉ của tôi', 'Thiết lập địa chỉ giao hàng', 
@@ -99,7 +105,9 @@ class ProfileScreen extends StatelessWidget {
       _buildListTile(Iconsax.shopping_cart, 'Giỏ hàng',
           'Thêm, xóa sản phẩm và thanh toán', null),
       _buildListTile(Iconsax.box, 'Đơn hàng của tôi',
-          'Đơn hàng đang xử lý và đã hoàn tất', null),
+          'Đơn hàng đang xử lý và đã hoàn tất', () {
+            Get.to(() => OrderListScreen(token: token));  // Điều hướng đến màn hình đơn hàng
+          }),
       _buildListTile(Iconsax.lock, 'Quyền riêng tư',
           'Quản lý quyền riêng tư và kết nối tài khoản', null),
       _buildListTile(

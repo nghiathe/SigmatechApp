@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:sigmatech/utils/device/device_utility.dart';
 import 'package:sigmatech/utils/constants/sizes.dart';
-
 class TAppBar extends StatelessWidget implements PreferredSizeWidget{
   const TAppBar({
     super.key,
@@ -19,6 +18,7 @@ class TAppBar extends StatelessWidget implements PreferredSizeWidget{
   final IconData? leadingIcon;
   final List<Widget>? actions;
   final VoidCallback? leadingOnPressed;
+
 
   @override
   Widget build(BuildContext context) {
