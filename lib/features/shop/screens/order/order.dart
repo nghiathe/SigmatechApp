@@ -7,11 +7,12 @@ import 'package:intl/intl.dart';
 
 import '../../../../navigation_menu.dart';
 import '../../controllers/userprofile/user_profile_controller.dart';
+import '../../models/cart_item.dart';
 import '../UserProfile/OrderList.dart';
 import '../home/home.dart';
 
 class OrderDetailScreen extends StatefulWidget {
-  final List<dynamic> cartItems;
+  final List<dynamic> cartItems; // Nhận giỏ hàng từ trang trước
 
   OrderDetailScreen({required this.cartItems});
 
@@ -31,22 +32,21 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
   String _paymentMethod = 'cod'; // Mặc định là thanh toán chuyển khoản
   String _gender = '1'; // 1: Nam, 2: Nữ
 
-  // Hàm tính tổng tiền từ giỏ hàng
   double getTotalPrice() {
     double total = 0;
     for (var item in widget.cartItems) {
-      total += (item['quantity'] * double.tryParse(item['price']) ?? 0);
+      total += (item.quantity * item.price); // Sử dụng item.quantity và item.price
     }
     return total;
   }
-
-  @override
-  void initState() {
-    super.initState();
-    controller.fetchUserProfile(); // Gọi hàm tải dữ liệu người dùng
+  Future<List<CartItem>> getCartItemsFromLocalStorage() async {
+    String? cartItemsJson = await deviceStorage.read('cart');
+    if (cartItemsJson != null) {
+      List<dynamic> cartItemsList = json.decode(cartItemsJson);
+      return cartItemsList.map((itemJson) => CartItem.fromJson(itemJson)).toList();
+    }
+    return [];
   }
-
-  // Hàm gửi yêu cầu API và xử lý kết quả
   Future<void> placeOrder() async {
     if (_formKey.currentState!.validate()) {
       String token = deviceStorage.read('authToken');
@@ -60,10 +60,10 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
         'gender': _gender,
         'totalPrice': getTotalPrice(),
         'items': widget.cartItems.map((item) => {
-          'productType': item['product_type'],
-          'productId': item['product_id'],
-          'quantity': item['quantity'],
-          'price': item['price'],
+          'productType': item.productType,  // Dùng thuộc tính thay vì key
+          'productId': item.productId,      // Dùng thuộc tính thay vì key
+          'quantity': item.quantity,        // Dùng thuộc tính thay vì key
+          'price': item.price,              // Dùng thuộc tính thay vì key
         }).toList(),
       }), headers: {
         'Content-Type': 'application/json',
@@ -73,12 +73,23 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
       var data = json.decode(response.body);
 
       if (response.statusCode == 200 && data['status'] == 'success') {
+        // Get all the items from localStorage
+        List<CartItem> cartItems = await getCartItemsFromLocalStorage();
+
+        // Filter out the items that were placed in the order (based on productId)
+        List<CartItem> remainingItems = cartItems.where((item) {
+          return !widget.cartItems.any((orderedItem) => orderedItem.productId == item.productId);
+        }).toList();
+
+        // Save the remaining items back into localStorage
+        await deviceStorage.write('cart', json.encode(remainingItems.map((item) => item.toJson()).toList()));
+
         if (_paymentMethod == 'banking') {
           // Điều hướng đến trang QR và giữ lại navigation
           Get.offAll(QRScreen(qrUrl: data['qrUrl']));
         } else {
-          // Điều hướng về màn hình đơn hàng
-          Get.offAll(() => OrderListScreen(token: token));
+          // Điều hướng về màn hình đơn hàng và giữ lại nút quay về
+          Get.to(() => OrderListScreen(token: token));
           showDialog(
             context: context,
             builder: (context) =>
@@ -94,7 +105,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                 ),
           );
         }
-      }  else {
+      } else {
         // Nếu có lỗi khi gửi yêu cầu
         showDialog(
           context: context,
@@ -111,6 +122,12 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
         );
       }
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    controller.fetchUserProfile(); // Gọi hàm tải dữ liệu người dùng
   }
 
   @override
@@ -256,6 +273,16 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                 ),
                               ],
                             ),
+                            TextFormField(
+                              initialValue: _note,
+                              decoration: InputDecoration(labelText: 'Ghi chú'),
+                              validator: (value) {
+                                return null;
+                              },
+                              onChanged: (value) {
+                                _note = value;
+                              },
+                            ),
                           ],
                         )
                       ],
@@ -269,7 +296,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
               child: ListView.builder(
                 itemCount: widget.cartItems.length,
                 itemBuilder: (context, index) {
-                  var item = widget.cartItems[index];
+                  var item = widget.cartItems[index]; // item là đối tượng CartItem
                   return Card(
                     margin: EdgeInsets.symmetric(vertical: 5.0),
                     elevation: 5,
@@ -278,7 +305,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                       child: Row(
                         children: [
                           Image.network(
-                            'https://6ma.zapto.org/${item['image']}', // Đảm bảo URL chính xác
+                            '${item.imageUrl}', // Sử dụng item.imageUrl
                             height: 100,
                             width: 100,
                             fit: BoxFit.cover,
@@ -289,11 +316,11 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  item['name'],
+                                  item.name, // Sử dụng item.name
                                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                                 ),
-                                Text('Số lượng: ${item['quantity']}'),
-                                Text('Giá: ${NumberFormat.currency(locale: 'vi', symbol: '', decimalDigits: 0).format(int.tryParse(item['price']) ?? 0)}đ'),
+                                Text('Số lượng: ${item.quantity}'), // Sử dụng item.quantity
+                                Text('Giá: ${NumberFormat.currency(locale: 'vi', symbol: '', decimalDigits: 0).format(item.price)}đ'), // Sử dụng item.price
                               ],
                             ),
                           ),
@@ -304,6 +331,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                 },
               ),
             ),
+
             // Tổng tiền
             Padding(
               padding: const EdgeInsets.only(top: 8.0, bottom: 16.0),
@@ -322,16 +350,18 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
             Padding(
               padding: const EdgeInsets.only(bottom: 16.0),
               child: ElevatedButton(
-                onPressed: placeOrder,
-                child: Text('Đặt hàng'),
+                onPressed: placeOrder,  // Gọi hàm placeOrder khi người dùng nhấn nút
+                child: Text('Hoàn tất đặt hàng'),
               ),
-            ),
+            )
+
           ],
         ),
       ),
     );
   }
 }
+
 
 class QRScreen extends StatelessWidget {
   final String qrUrl;

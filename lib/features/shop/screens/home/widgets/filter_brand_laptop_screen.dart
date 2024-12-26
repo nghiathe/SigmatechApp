@@ -136,19 +136,22 @@ class BrandLaptopScreen extends StatelessWidget {
                         padding: const EdgeInsets.all(10),
                       ),
                       onPressed: () async {
-                        String token = GetStorage().read('authToken'); // Lấy token từ bộ nhớ
-                        await CartController.addToCart(
-                          token,
-                          'laptops',
-                          laptop['id'],
-                          1,
-                          laptop['name'],
+                        await CartController.addToCartLocal(
+                          laptop['id'],      // productId
+                          'laptops',         // productType
+                          1,                 // quantity
+                          laptop['name'],    // name
+                          price,             // price
+                          imageUrl,          // imageUrl
                         );
+
+                        // Hiển thị thông báo snack bar
                         Get.snackbar(
                           'Giỏ hàng',
                           '${laptop['name']} đã được thêm vào giỏ hàng!',
                         );
                       },
+
                       child: const Icon(
                         Icons.add,
                         size: 20,
