@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:sigmatech/common/widgets/appbar/appbar.dart';
 import 'package:sigmatech/features/shop/controllers/userprofile/user_profile_controller.dart';
 import 'package:sigmatech/features/shop/screens/UserProfile/OrderList.dart';
 import 'package:sigmatech/features/shop/screens/userprofile/widgets/address.dart';
@@ -20,11 +21,16 @@ class ProfileScreen extends StatelessWidget {
     final controller = Get.put(UserProfileController());
 
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        title: const Text('Tài khoản', style: TextStyle(fontSize: 20)),
-        backgroundColor: dark ? TColors.black : Colors.white,
-        foregroundColor: dark ? Colors.white : Colors.black,
+      appBar: const TAppBar(
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Tài khoản',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
+            ),
+          ],
+        ),
       ),
       body: Obx(() {
         final user = controller.user;
@@ -100,7 +106,7 @@ class ProfileScreen extends StatelessWidget {
       _buildListTile(
         Iconsax.home, 'Địa chỉ của tôi', 'Thiết lập địa chỉ giao hàng', 
         () {
-          Get.to(() => const AddressScreen());
+          Get.to(() => AddressScreen());
         }),
       _buildListTile(Iconsax.shopping_cart, 'Giỏ hàng',
           'Thêm, xóa sản phẩm và thanh toán', null),

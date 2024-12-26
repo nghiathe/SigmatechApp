@@ -8,9 +8,7 @@ import 'dart:convert';
 
 import 'package:sigmatech/utils/popups/loaders.dart';
 
-
 class UserProfileController extends GetxController {
-
   static UserProfileController get instance => Get.find();
   final Rx<User?> _user = Rx<User?>(null);
   final String baseUrl = 'https://6ma.zapto.org/api';
@@ -21,6 +19,7 @@ class UserProfileController extends GetxController {
   String get userAddress {
     return _user.value?.address ?? 'Chưa cập nhật địa chỉ';
   }
+
   @override
   void onInit() {
     super.onInit();
@@ -31,10 +30,6 @@ class UserProfileController extends GetxController {
     final String? token = deviceStorage.read('authToken');
 
     if (token == null) {
-      TLoaders.errorSnackBar(
-        title: 'Lỗi xảy ra.',
-        message: 'Bạn cần đăng nhập để thực hiện chức năng này.',
-      );
       return;
     }
 
@@ -52,7 +47,8 @@ class UserProfileController extends GetxController {
       if (response.statusCode == 200) {
         // Parse the response to get the updated user data
         final data = jsonDecode(response.body);
-        _user.value = User.fromJson(data);
+        
+        _user.value!.address = data['address'];
 
         TLoaders.successSnackBar(
           title: 'Cập nhật thành công',
@@ -73,7 +69,6 @@ class UserProfileController extends GetxController {
   }
 
   Future<void> fetchUserProfile() async {
-
     final String? token = deviceStorage.read('authToken');
 
     if (token == null) {
@@ -94,11 +89,12 @@ class UserProfileController extends GetxController {
         _user.value = User.fromJson(data);
       } else {
         TLoaders.errorSnackBar(
-          title: 'Lỗi xảy ra.', message: 'Không lấy được dữ liệu người dùng.');
+            title: 'Lỗi xảy ra.',
+            message: 'Không lấy được dữ liệu người dùng.');
       }
     } catch (e) {
       TLoaders.errorSnackBar(
-        title: 'Lỗi xảy ra.', message: 'Không lấy được dữ liệu người dùng.');
+          title: 'Lỗi xảy ra.', message: 'Không lấy được dữ liệu người dùng.');
     }
   }
 
@@ -120,6 +116,7 @@ class UserProfileController extends GetxController {
       );
     }
   }
+
   void isDarkMode(bool value) {
     deviceStorage.write('isDarkMode', value);
   }

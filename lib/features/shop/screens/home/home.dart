@@ -19,7 +19,7 @@ import 'package:sigmatech/features/shop/screens/chat/chat_screen.dart'; // Impor
 
 class HomeScreen extends StatelessWidget {
   final LaptopService laptopService = LaptopService.instance;
-  final TextEditingController searchController = TextEditingController(); // Thêm controller
+  final TextEditingController searchController = TextEditingController();
   final WishlistService wishlistService = Get.put(WishlistService());
   final List<String> sliderImages = [
     'https://6ma.zapto.org/assets/img/banner/Slider/Slide1.jpg',
@@ -92,7 +92,7 @@ class HomeScreen extends StatelessWidget {
                   color: Colors.grey[200],
                   borderRadius: BorderRadius.circular(12), // Giữ bo tròn nếu cần
                 ),
-                child: const Row(
+                child: Row(
                   children: [
                     Expanded(
                       child: TextField(
