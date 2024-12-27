@@ -272,19 +272,21 @@ class _CartScreenState extends State<CartScreen> {
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   minimumSize: Size(200, 50),
-                  backgroundColor: const Color(0xFF408591)
+                  backgroundColor: const Color(0xFF408591),
                 ),
-                onPressed: () {
+                onPressed: selectedItems.isEmpty || calculateTotal() == 0
+                    ? null // Vô hiệu hóa nút nếu không có sản phẩm được chọn hoặc tổng tiền = 0
+                    : () {
                   // Chuyển sang trang OrderDetailScreen và truyền giỏ hàng
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => OrderDetailScreen(cartItems: selectedItems),  // Gửi danh sách selectedItems
+                      builder: (context) => OrderDetailScreen(cartItems: selectedItems), // Gửi danh sách selectedItems
                     ),
                   );
                 },
                 child: Text('Đặt hàng'),
-              )
+              ),
 
             ],
           ),
