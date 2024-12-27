@@ -6,6 +6,7 @@ import 'dart:convert';
 import 'package:intl/intl.dart';
 
 import '../../../../navigation_menu.dart';
+import '../../controllers/cart/cart_controller.dart';
 import '../../controllers/userprofile/user_profile_controller.dart';
 import '../../models/cart_item.dart';
 import '../UserProfile/OrderList.dart';
@@ -383,7 +384,7 @@ class QRScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        // Quay lại màn hình trước mà vẫn giữ lại NavigationBar
+        Get.find<CartController>().updateCartCountFromLocalStorage();
         Get.offAll(() => NavigationMenu()); // Quay về NavigationMenu hoặc trang nào có NavigationBar
         return false; // Ngăn không cho hành động mặc định (back stack)
       },
