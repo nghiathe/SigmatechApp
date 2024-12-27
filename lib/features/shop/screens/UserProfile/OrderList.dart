@@ -17,7 +17,7 @@ class OrderListScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('Danh sách đơn hàng'),
-        backgroundColor: Colors.blueAccent, // Thêm màu nền cho appBar
+        backgroundColor: const Color(0xFF408591),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
@@ -45,7 +45,7 @@ class OrderListScreen extends StatelessWidget {
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)), // Góc bo tròn cho card
               child: ListTile(
                 contentPadding: EdgeInsets.symmetric(vertical: 16, horizontal: 12), // Padding cho listTile
-                leading: Icon(Icons.shopping_bag, color: Colors.blueAccent), // Thêm icon cho đơn hàng
+                leading: Icon(Icons.shopping_bag, color: const Color(0xFF408591),), // Thêm icon cho đơn hàng
                 title: Text(order.customerName, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
                 subtitle: Text('Tổng giá: ${order.totalPrice.toStringAsFixed(0)} đ', style: TextStyle(color: Colors.grey[700])),
                 trailing: Container(

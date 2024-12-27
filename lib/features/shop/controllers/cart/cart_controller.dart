@@ -6,10 +6,14 @@ import 'package:http/http.dart' as http;
 import '../../models/cart_item.dart';
 
 
-class CartController {
-  static const String baseUrl = 'https://6ma.zapto.org/api';
+class CartController extends GetxController {
   static final deviceStorage = GetStorage();
 
+  @override
+  void onInit() {
+    super.onInit();
+    updateCartCountFromLocalStorage();  // Gọi hàm cập nhật số lượng giỏ hàng khi controller khởi tạo
+  }
   static Future<void> addToCartLocal(
       int productId,
       String productType,
@@ -20,16 +24,11 @@ class CartController {
     try {
       // Đọc dữ liệu giỏ hàng hiện tại từ GetStorage
       final String? cartData = deviceStorage.read('cart');
-
-      // Kiểm tra xem cartData có dữ liệu không và nếu có thì chuyển thành List<CartItem>
       List<CartItem> cartItems = [];
       if (cartData != null) {
-        // Giải mã chuỗi JSON thành List<CartItem>
         final List<dynamic> jsonList = json.decode(cartData);
         cartItems = jsonList.map((item) => CartItem.fromJson(item)).toList();
       }
-
-      // Kiểm tra xem sản phẩm đã tồn tại trong giỏ hàng chưa
       bool isProductExist = false;
       for (var item in cartItems) {
         if (item.productId == productId && item.productType == productType) {
@@ -39,8 +38,6 @@ class CartController {
           break;
         }
       }
-
-      // Nếu sản phẩm chưa tồn tại, thêm sản phẩm mới vào giỏ hàng
       if (!isProductExist) {
         cartItems.add(CartItem(
           productId: productId,
@@ -51,10 +48,7 @@ class CartController {
           imageUrl: imageUrl,
         ));
       }
-
-      // Lưu lại giỏ hàng sau khi thay đổi
       await saveCartItemsToStorage(cartItems);
-
     } catch (e) {
       print('Lỗi khi thêm vào giỏ hàng: $e');
     }

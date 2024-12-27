@@ -60,35 +60,27 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
         'gender': _gender,
         'totalPrice': getTotalPrice(),
         'items': widget.cartItems.map((item) => {
-          'productType': item.productType,  // Dùng thuộc tính thay vì key
-          'productId': item.productId,      // Dùng thuộc tính thay vì key
-          'quantity': item.quantity,        // Dùng thuộc tính thay vì key
-          'price': item.price,              // Dùng thuộc tính thay vì key
+          'productType': item.productType,
+          'productId': item.productId,
+          'quantity': item.quantity,
+          'price': item.price,
         }).toList(),
       }), headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token',
       });
-
       var data = json.decode(response.body);
 
       if (response.statusCode == 200 && data['status'] == 'success') {
-        // Get all the items from localStorage
         List<CartItem> cartItems = await getCartItemsFromLocalStorage();
-
-        // Filter out the items that were placed in the order (based on productId)
         List<CartItem> remainingItems = cartItems.where((item) {
           return !widget.cartItems.any((orderedItem) => orderedItem.productId == item.productId);
         }).toList();
-
-        // Save the remaining items back into localStorage
         await deviceStorage.write('cart', json.encode(remainingItems.map((item) => item.toJson()).toList()));
 
         if (_paymentMethod == 'banking') {
-          // Điều hướng đến trang QR và giữ lại navigation
           Get.offAll(QRScreen(qrUrl: data['qrUrl']));
         } else {
-          // Điều hướng về màn hình đơn hàng và giữ lại nút quay về
           Get.to(() => OrderListScreen(token: token));
           showDialog(
             context: context,
@@ -132,210 +124,223 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Thông tin đơn hàng')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            // Form nhập thông tin
-            Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Cập nhật giá trị từ userProfileController nếu có
-                  Obx(() {
-                    if (controller.user == null) {
-                      return Center(child: CircularProgressIndicator());
-                    }
-                    _fullname = controller.user?.name ?? '';
-                    _phone = controller.user?.phone ?? '';
-                    _address = controller.user?.address ?? '';
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        TextFormField(
-                          initialValue: _fullname,
-                          decoration: InputDecoration(labelText: 'Họ tên'),
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return 'Vui lòng nhập họ tên';
-                            }
-                            return null;
-                          },
-                          onChanged: (value) {
-                            _fullname = value;
-                          },
-                        ),
-                        SizedBox(height: 16),
-                        TextFormField(
-                          initialValue: _phone,
-                          decoration: InputDecoration(labelText: 'Số điện thoại'),
-                          keyboardType: TextInputType.phone,
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return 'Vui lòng nhập số điện thoại';
-                            }
-                            return null;
-                          },
-                          onChanged: (value) {
-                            _phone = value;
-                          },
-                        ),
-                        SizedBox(height: 16),
-                        TextFormField(
-                          initialValue: _address,
-                          decoration: InputDecoration(labelText: 'Địa chỉ giao hàng'),
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return 'Vui lòng nhập địa chỉ';
-                            }
-                            return null;
-                          },
-                          onChanged: (value) {
-                            _address = value;
-                          },
-                        ),
-                        SizedBox(height: 16),
-                        // Chọn giới tính
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: ListTile(
-                                    title: Text("Anh"),
-                                    leading: Radio<String>(
-                                      value: '1',
-                                      groupValue: _gender,
-                                      onChanged: (String? value) {
-                                        setState(() {
-                                          _gender = value!;
-                                        });
-                                      },
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  child: ListTile(
-                                    title: Text("Chị"),
-                                    leading: Radio<String>(
-                                      value: '2',
-                                      groupValue: _gender,
-                                      onChanged: (String? value) {
-                                        setState(() {
-                                          _gender = value!;
-                                        });
-                                      },
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 16),
-
-                            // Tiêu đề Chọn phương thức thanh toán
-                            Text(
-                              'Chọn phương thức thanh toán:',
-                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                            ),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: ListTile(
-                                    title: Text("Thanh toán khi nhận hàng"),
-                                    leading: Radio<String>(
-                                      value: 'cod',
-                                      groupValue: _paymentMethod,
-                                      onChanged: (String? value) {
-                                        setState(() {
-                                          _paymentMethod = value!;
-                                        });
-                                      },
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  child: ListTile(
-                                    title: Text("Thanh toán qua ngân hàng"),
-                                    leading: Radio<String>(
-                                      value: 'banking',
-                                      groupValue: _paymentMethod,
-                                      onChanged: (String? value) {
-                                        setState(() {
-                                          _paymentMethod = value!;
-                                        });
-                                      },
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            TextFormField(
-                              initialValue: _note,
-                              decoration: InputDecoration(labelText: 'Ghi chú'),
-                              validator: (value) {
-                                return null;
-                              },
-                              onChanged: (value) {
-                                _note = value;
-                              },
-                            ),
-                          ],
-                        )
-                      ],
-                    );
-                  }),
-                ],
-              ),
-            ),
-            // Danh sách sản phẩm
-            Expanded(
-              child: ListView.builder(
-                itemCount: widget.cartItems.length,
-                itemBuilder: (context, index) {
-                  var item = widget.cartItems[index]; // item là đối tượng CartItem
-                  return Card(
-                    margin: EdgeInsets.symmetric(vertical: 5.0),
-                    elevation: 5,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
+    return GestureDetector(
+      onTap: () {
+        // Ẩn bàn phím khi người dùng chạm vào ngoài trường nhập liệu
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+        resizeToAvoidBottomInset: true,
+        appBar: AppBar(title: Text('Thông tin đơn hàng')),
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              // Form nhập thông tin
+              Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Obx(() {
+                      if (controller.user == null) {
+                        return Center(child: CircularProgressIndicator());
+                      }
+                      _fullname = controller.user?.name ?? '';
+                      _phone = controller.user?.phone ?? '';
+                      _address = controller.user?.address ?? '';
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Image.network(
-                            '${item.imageUrl}', // Sử dụng item.imageUrl
-                            height: 100,
-                            width: 100,
-                            fit: BoxFit.cover,
+                          TextFormField(
+                            initialValue: _fullname,
+                            decoration: InputDecoration(labelText: 'Họ tên'),
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Vui lòng nhập họ tên';
+                              }
+                              return null;
+                            },
+                            onChanged: (value) {
+                              _fullname = value;
+                            },
                           ),
-                          SizedBox(width: 12),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  item.name, // Sử dụng item.name
-                                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                                ),
-                                Text('Số lượng: ${item.quantity}'), // Sử dụng item.quantity
-                                Text('Giá: ${NumberFormat.currency(locale: 'vi', symbol: '', decimalDigits: 0).format(item.price)}đ'), // Sử dụng item.price
-                              ],
-                            ),
+                          SizedBox(height: 16),
+                          TextFormField(
+                            initialValue: _phone,
+                            decoration: InputDecoration(labelText: 'Số điện thoại'),
+                            keyboardType: TextInputType.phone,
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Vui lòng nhập số điện thoại';
+                              }
+                              return null;
+                            },
+                            onChanged: (value) {
+                              _phone = value;
+                            },
+                          ),
+                          SizedBox(height: 16),
+                          TextFormField(
+                            initialValue: _address,
+                            decoration: InputDecoration(labelText: 'Địa chỉ giao hàng'),
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Vui lòng nhập địa chỉ';
+                              }
+                              return null;
+                            },
+                            onChanged: (value) {
+                              _address = value;
+                            },
+                          ),
+                          SizedBox(height: 16),
+                          // Chọn giới tính
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: ListTile(
+                                      title: Text("Anh"),
+                                      leading: Radio<String>(
+                                        value: '1',
+                                        groupValue: _gender,
+                                        onChanged: (String? value) {
+                                          setState(() {
+                                            _gender = value!;
+                                          });
+                                        },
+                                        activeColor: const Color(0xFF408591),
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: ListTile(
+                                      title: Text("Chị"),
+                                      leading: Radio<String>(
+                                        value: '2',
+                                        groupValue: _gender,
+                                        onChanged: (String? value) {
+                                          setState(() {
+                                            _gender = value!;
+                                          });
+                                        },
+                                        activeColor: const Color(0xFF408591),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 16),
+                              // Tiêu đề Chọn phương thức thanh toán
+                              Text(
+                                'Chọn phương thức thanh toán:',
+                                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                              ),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: ListTile(
+                                      title: Text("Thanh toán khi nhận hàng"),
+                                      leading: Radio<String>(
+                                        value: 'cod',
+                                        groupValue: _paymentMethod,
+                                        onChanged: (String? value) {
+                                          setState(() {
+                                            _paymentMethod = value!;
+                                          });
+                                        },
+                                        activeColor: const Color(0xFF408591),
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: ListTile(
+                                      title: Text("Thanh toán qua ngân hàng"),
+                                      leading: Radio<String>(
+                                        value: 'banking',
+                                        groupValue: _paymentMethod,
+                                        onChanged: (String? value) {
+                                          setState(() {
+                                            _paymentMethod = value!;
+                                          });
+                                        },
+                                        activeColor: const Color(0xFF408591),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              TextFormField(
+                                initialValue: _note,
+                                decoration: InputDecoration(labelText: 'Ghi chú'),
+                                validator: (value) {
+                                  return null;
+                                },
+                                onChanged: (value) {
+                                  _note = value;
+                                },
+                              ),
+                            ],
                           ),
                         ],
-                      ),
-                    ),
-                  );
-                },
+                      );
+                    }),
+                  ],
+                ),
               ),
-            ),
-
-            // Tổng tiền
-            Padding(
-              padding: const EdgeInsets.only(top: 8.0, bottom: 16.0),
-              child: Row(
+              // Danh sách sản phẩm
+              Expanded(
+                child: ListView.builder(
+                  itemCount: widget.cartItems.length,
+                  itemBuilder: (context, index) {
+                    var item = widget.cartItems[index]; // item là đối tượng CartItem
+                    return Card(
+                      margin: EdgeInsets.symmetric(vertical: 5.0),
+                      elevation: 5,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          children: [
+                            Image.network(
+                              '${item.imageUrl}', // Sử dụng item.imageUrl
+                              height: 100,
+                              width: 100,
+                              fit: BoxFit.cover,
+                            ),
+                            SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    item.name, // Sử dụng item.name
+                                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                  ),
+                                  Text('Số lượng: ${item.quantity}'), // Sử dụng item.quantity
+                                  Text('Giá: ${NumberFormat.currency(locale: 'vi', symbol: '', decimalDigits: 0).format(item.price)}đ'), // Sử dụng item.price
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+        bottomSheet: Container(
+          color: Colors.white,
+          padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text('Tổng tiền', style: TextStyle(fontSize: 16)),
@@ -345,17 +350,23 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                   ),
                 ],
               ),
-            ),
-            // Nút đặt hàng
-            Padding(
-              padding: const EdgeInsets.only(bottom: 16.0),
-              child: ElevatedButton(
-                onPressed: placeOrder,  // Gọi hàm placeOrder khi người dùng nhấn nút
-                child: Text('Hoàn tất đặt hàng'),
+              SizedBox(height: 16),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: placeOrder,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF408591),
+                    padding: EdgeInsets.symmetric(vertical: 16),
+                  ),
+                  child: Text(
+                    'Hoàn tất đặt hàng',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                ),
               ),
-            )
-
-          ],
+            ],
+          ),
         ),
       ),
     );

@@ -14,7 +14,6 @@ Future<void> main() async {
   await GetStorage.init();
 
   Get.put(LaptopService());
-  Get.put(CartController());
   // Khởi chạy ứng dụng
   runApp(const MyApp());
 }
