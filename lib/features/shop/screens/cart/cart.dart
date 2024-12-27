@@ -140,7 +140,6 @@ class _CartScreenState extends State<CartScreen> {
                     itemCount: cartItems.length,
                     itemBuilder: (context, index) {
                       CartItem item = cartItems[index];
-
                       return Card(
                         margin: EdgeInsets.symmetric(vertical: 5.0),
                         elevation: 5,
@@ -149,23 +148,34 @@ class _CartScreenState extends State<CartScreen> {
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              // Checkbox bên trái ảnh sản phẩm
-                              Checkbox(
-                                value: selectedItems.contains(item),
-                                onChanged: (value) {
-                                  toggleSelectItem(item, value);
-                                },
+                              Column(
+                                children: [
+                                  Checkbox(
+                                    value: selectedItems.contains(item),
+                                    onChanged: (value) {
+                                      toggleSelectItem(item, value);
+                                    },
+                                      activeColor: const Color(0xFF408591),
+                                  ),
+                                  IconButton(
+                                    icon: Icon(Icons.delete, color: Colors.red),
+                                    onPressed: () {
+                                      removeFromCart(item.productType, item.productId);
+                                    },
+                                  ),
+                                ],
                               ),
-                              // Ảnh sản phẩm
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(8.0),
-                                child: Image.network(
-                                  '${item.imageUrl}',
-                                  height: 100,
-                                  width: 100,
-                                  fit: BoxFit.cover,
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  child: Image.network(
+                                    '${item.imageUrl}',
+                                    height: 100,
+                                    width: 100,
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
-                              ),
+
+
                               SizedBox(width: 12),
                               // Chi tiết sản phẩm
                               Expanded(
@@ -210,16 +220,11 @@ class _CartScreenState extends State<CartScreen> {
                                   ],
                                 ),
                               ),
-                              IconButton(
-                                icon: Icon(Icons.delete, color: Colors.red),
-                                onPressed: () {
-                                  removeFromCart(item.productType, item.productId);
-                                },
-                              ),
                             ],
                           ),
                         ),
                       );
+
                     },
                   ),
                 ),
@@ -260,12 +265,14 @@ class _CartScreenState extends State<CartScreen> {
                 onChanged: (value) {
                   toggleSelectAll(value);
                 },
+                  activeColor: const Color(0xFF408591)
               ),
               Text('Chọn tất cả'),
               // Cập nhật phần nút "Đặt hàng"
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   minimumSize: Size(200, 50),
+                  backgroundColor: const Color(0xFF408591)
                 ),
                 onPressed: () {
                   // Chuyển sang trang OrderDetailScreen và truyền giỏ hàng
